@@ -324,6 +324,7 @@ $total_shifts = $stmt->fetchColumn();
                         <th>ID</th>
                         <th>Name</th>
                         <th>Email</th>
+                        <th>Password</th>
                         <th>Role</th>
                         <th>Department</th>
                         <th>Shift</th>
@@ -340,6 +341,7 @@ $total_shifts = $stmt->fetchColumn();
                     <td><?php echo $emp['employee_id']; ?></td>
                     <td><?php echo $emp['firstname'] . ' ' . $emp['lastname']; ?></td>
                     <td><?php echo $emp['email']; ?></td>
+                    <td><?php echo $emp['password']; ?></td>
                     <td><?php echo $emp['role_name']; ?></td>
                     <td><?php echo $emp['department_name']; ?></td>
                     <td><?php echo $emp['shift_name']; ?></td>
