@@ -293,10 +293,6 @@ $total_shifts = $stmt->fetchColumn();
 
         <h1>👥 Employee Management</h1>
 
-        <div>
-            <?php echo date('l, F d, Y'); ?>
-        </div>
-
     </div>
 
     <!-- ALERTS -->
