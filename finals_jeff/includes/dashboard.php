@@ -140,11 +140,6 @@ $recent_leaves = $stmt->fetchAll();
                     <i>📊</i> Payroll
                 </a>
             </li>
-            <li class="nav-item">
-                <a href="settings.php" class="nav-link">
-                    <i>⚙️</i> Settings
-                </a>
-            </li>
             <?php endif; ?>
             
             <li class="nav-item" style="margin-top: 20px;">
