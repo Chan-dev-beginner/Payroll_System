@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3307
--- Generation Time: May 13, 2026 at 04:08 AM
+-- Host: 127.0.0.1
+-- Generation Time: May 18, 2026 at 12:46 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -90,10 +90,9 @@ CREATE TABLE `employees` (
 --
 
 INSERT INTO `employees` (`id`, `employee_id`, `firstname`, `lastname`, `email`, `password`, `phone`, `role_id`, `department_id`, `shift_id`, `hire_date`, `status`, `is_hr`, `is_admin`, `created_at`) VALUES
-(1, 'EMP001', 'Admin', 'User', 'admin@company.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 1, 1, 2, '2024-01-01', 'active', 1, 1, '2026-05-13 01:40:24'),
-(2, 'EMP002', 'Juan', 'Dela Cruz', 'juan@company.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 3, 2, 2, '2024-02-15', 'active', 0, 0, '2026-05-13 01:40:39'),
-(3, 'EMP003', 'Maria', 'Santos', 'maria@company.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 4, 3, 2, '2024-03-01', 'active', 0, 0, '2026-05-13 01:41:01'),
-(4, 'EMP004', 'Pedro', 'Reyes', 'pedro@company.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, 2, 2, 1, '2024-01-15', 'active', 0, 0, '2026-05-13 01:41:01');
+(1, 'EMP001', 'Admin', 'User', 'admin@company.com', 'admin123', '', 1, 1, 3, '2024-01-01', 'active', 1, 1, '2026-05-13 01:40:24'),
+(2, 'EMP002', 'Juan', 'Dela Cruz', 'juan@company.com', 'pass123', '123456789', 3, 2, 2, '2024-02-15', 'active', 0, 0, '2026-05-13 01:40:39'),
+(5, 'EMP666', 'chan', 'chan', 'chan@company.com', 'qwerty123', '', 1, 2, 2, '2026-05-18', 'active', 0, 0, '2026-05-18 10:25:37');
 
 -- --------------------------------------------------------
 
@@ -105,19 +104,22 @@ CREATE TABLE `incentive_types` (
   `id` int(11) NOT NULL,
   `incentive_name` varchar(100) NOT NULL,
   `description` text DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `employee_id` int(11) NOT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `date_given` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `incentive_types`
 --
 
-INSERT INTO `incentive_types` (`id`, `incentive_name`, `description`, `created_at`) VALUES
-(1, 'Performance Bonus', 'Monthly performance-based bonus', '2026-05-13 01:39:19'),
-(2, 'Sales Commission', 'Commission from sales', '2026-05-13 01:39:19'),
-(3, 'Attendance Bonus', 'Perfect attendance reward', '2026-05-13 01:39:19'),
-(4, 'Holiday Bonus', '13th month pay or holiday bonus', '2026-05-13 01:39:19'),
-(5, 'Overtime Pay', 'Additional pay for overtime work', '2026-05-13 01:39:19');
+INSERT INTO `incentive_types` (`id`, `incentive_name`, `description`, `created_at`, `employee_id`, `amount`, `date_given`) VALUES
+(1, 'Performance Bonus', 'Monthly performance-based bonus', '2026-05-13 01:39:19', 1, 100.00, '2026-05-18'),
+(2, 'Sales Commission', 'Commission from sales', '2026-05-13 01:39:19', 1, 500.00, '2026-05-18'),
+(3, 'Attendance Bonus', 'Perfect attendance reward', '2026-05-13 01:39:19', 1, 100.00, '2026-05-18'),
+(4, 'Holiday Bonus', '13th month pay or holiday bonus', '2026-05-13 01:39:19', 1, 1200.00, '2026-05-18'),
+(5, 'Overtime Pay', 'Additional pay for overtime work', '2026-05-13 01:39:19', 1, 70.00, '2026-05-18');
 
 -- --------------------------------------------------------
 
@@ -326,13 +328,13 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `incentive_types`
 --
 ALTER TABLE `incentive_types`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `leave_requests`
