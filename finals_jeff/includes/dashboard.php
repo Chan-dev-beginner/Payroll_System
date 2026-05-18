@@ -64,7 +64,7 @@ $recent_leaves = $stmt->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Payroll System</title>
-    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="stylesheet" href="../assets/dashboard.css">
 </head>
 <body class="dashboard">
     
@@ -81,11 +81,25 @@ $recent_leaves = $stmt->fetchAll();
                     <i>🏠</i> Dashboard
                 </a>
             </li>
+            
             <li class="nav-item">
-                <a href="attendance.php" class="nav-link">
-                    <i>⏰</i> My Attendance
-                </a>
+
+                <?php if ($user['is_hr'] || $user['is_admin']): ?>
+
+                    <a href="attendance_hr.php" class="nav-link">
+                        <i>⏰</i> Attendance
+                    </a>
+
+                <?php else: ?>
+
+                    <a href="attendance.php" class="nav-link">
+                        <i>⏰</i> My Attendance
+                    </a>
+
+                <?php endif; ?>
+
             </li>
+
             <li class="nav-item">
                 <a href="leave.php" class="nav-link">
                     <i>🏖️</i> Request Leave
@@ -93,7 +107,7 @@ $recent_leaves = $stmt->fetchAll();
             </li>
             <li class="nav-item">
                 <a href="payslip.php" class="nav-link">
-                    <i>💰</i> My Payslip
+                    <i>💰</i> Payslip
                 </a>
             </li>
             
@@ -102,7 +116,7 @@ $recent_leaves = $stmt->fetchAll();
                 HR MANAGEMENT
             </li>
             <li class="nav-item">
-                <a href="employees.php" class="nav-link">
+                <a href="employee.php" class="nav-link">
                     <i>👥</i> Employees
                 </a>
             </li>
