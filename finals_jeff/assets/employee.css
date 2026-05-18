@@ -1,5 +1,5 @@
 /* =========================================================
-  EMPLOYEE UI
+   EMPLOYEE UI
 ========================================================= */
 * {
     margin: 0;
@@ -426,4 +426,31 @@ table tr:hover{
     table{
         min-width:900px;
     }
+}
+
+/* =========================================================
+   ACTION BUTTON
+========================================================= */
+
+.action-buttons{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.btn-sm{
+    padding:8px 14px;
+    font-size:13px;
+    border-radius:6px;
+}
+
+.btn-primary{
+    background:#3b82f6;
+    color:white;
+    border:none;
+}
+
+.btn-primary:hover{
+    background:#2563eb;
+    transform:translateY(-1px);
 }
