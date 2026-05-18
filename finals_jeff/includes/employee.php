@@ -267,13 +267,8 @@ $total_shifts = $stmt->fetchColumn();
 
     <div class="user-info">
 
-        <strong>
-            <?php echo htmlspecialchars($user['name']); ?>
-        </strong>
-
-        <small>
-            <?php echo htmlspecialchars($user['email']); ?>
-        </small>
+        <strong> <?php echo htmlspecialchars($user['name']); ?> </strong>
+        <small> <?php echo htmlspecialchars($user['email']); ?> </small>
 
         <?php if ($user['is_admin']): ?>
             <span class="badge badge-admin">ADMIN</span>
@@ -290,9 +285,7 @@ $total_shifts = $stmt->fetchColumn();
 
     <!-- TOPBAR -->
     <div class="topbar">
-
         <h1>👥 Employee Management</h1>
-
     </div>
 
     <!-- ALERTS -->
@@ -336,51 +329,40 @@ $total_shifts = $stmt->fetchColumn();
                         <th>Shift</th>
                         <th>Salary</th>
                         <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
-
                 <tbody>
 
-                    <?php foreach($employees as $emp): ?>
+                <?php foreach($employees as $emp): ?>
 
-                    <tr>
+                <tr>
+                    <td><?php echo $emp['employee_id']; ?></td>
+                    <td><?php echo $emp['firstname'] . ' ' . $emp['lastname']; ?></td>
+                    <td><?php echo $emp['email']; ?></td>
+                    <td><?php echo $emp['role_name']; ?></td>
+                    <td><?php echo $emp['department_name']; ?></td>
+                    <td><?php echo $emp['shift_name']; ?></td>
+                    <td>₱<?php echo number_format($emp['monthly_salary'], 2); ?></td>
+                    <td>
+                        <span class="status status-<?php echo $emp['status']; ?>">
+                            <?php echo ucfirst($emp['status']); ?>
+                        </span>
+                    </td>
 
-                        <td><?php echo $emp['employee_id']; ?></td>
-
-                        <td>
-                            <?php echo $emp['firstname'] . ' ' . $emp['lastname']; ?>
-                        </td>
-
-                        <td><?php echo $emp['email']; ?></td>
-
-                        <td><?php echo $emp['role_name']; ?></td>
-
-                        <td><?php echo $emp['department_name']; ?></td>
-
-                        <td><?php echo $emp['shift_name']; ?></td>
-
-                        <td>
-                            ₱<?php echo number_format($emp['monthly_salary'],2); ?>
-                        </td>
-
-                        <td>
-                            <span class="status status-<?php echo $emp['status']; ?>">
-                                <?php echo ucfirst($emp['status']); ?>
-                            </span>
-                        </td>
-
-                    </tr>
+                    <td>
+                        <div class="action-buttons">
+                        <button type="button" class="btn btn-primary btn-sm" onclick='editEmployee(<?php echo json_encode($emp); ?>)'>Edit</button>
+                        </div>
+                    </td>
+                </tr>
 
                     <?php endforeach; ?>
 
-                </tbody>
-
+            </tbody>
             </table>
-
         </div>
-
     </div>
-
 </main>
 
 <script>
@@ -417,16 +399,12 @@ function closeModal(id){
 
                 <div class="form-group">
                     <label>First Name *</label>
-                    <input type="text"
-                           name="firstname"
-                           required>
+                    <input type="text" name="firstname" required>
                 </div>
 
                 <div class="form-group">
                     <label>Last Name *</label>
-                    <input type="text"
-                           name="lastname"
-                           required>
+                    <input type="text" name="lastname" required>
                 </div>
 
             </div>
@@ -435,16 +413,12 @@ function closeModal(id){
 
                 <div class="form-group">
                     <label>Email *</label>
-                    <input type="email"
-                           name="email"
-                           required>
+                    <input type="email" name="email" required>
                 </div>
 
                 <div class="form-group">
                     <label>Password *</label>
-                    <input type="password"
-                           name="password"
-                           required>
+                    <input type="password" name="password" required>
                 </div>
 
             </div>
@@ -488,24 +462,18 @@ function closeModal(id){
 
                     <select name="department_id" required>
 
-                        <option value="">
-                            Select Department
-                        </option>
+                        <option value=""> Select Department </option>
 
                         <?php foreach ($departments as $dept): ?>
 
                         <option value="<?php echo $dept['id']; ?>">
-
                             <?php echo htmlspecialchars($dept['department_name']); ?>
-
                         </option>
 
                         <?php endforeach; ?>
 
                     </select>
-
                 </div>
-
             </div>
 
             <div class="form-row">
@@ -516,9 +484,7 @@ function closeModal(id){
 
                     <select name="shift_id" required>
 
-                        <option value="">
-                            Select Shift
-                        </option>
+                        <option value=""> Select Shift </option>
 
                         <?php foreach ($shifts as $shift): ?>
 
@@ -538,104 +504,57 @@ function closeModal(id){
 
                 <div class="form-group">
                     <label>Hire Date *</label>
-
-                    <input type="date"
-                           name="hire_date"
-                           value="<?php echo date('Y-m-d'); ?>"
-                           required>
+                    <input type="date" name="hire_date" value="<?php echo date('Y-m-d'); ?>" required>
                 </div>
 
             </div>
 
             <div class="form-group">
-
-                <button type="submit"
-                        class="btn btn-primary">
-                    Add Employee
-                </button>
-
-                <button type="button"
-                        class="btn btn-secondary"
-                        onclick="closeModal('addModal')">
-                    Cancel
-                </button>
-
+                <button type="submit" class="btn btn-primary"> Add Employee </button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal('addModal')"> Cancel </button>
             </div>
-
         </form>
-
     </div>
 </div>
 
 <!-- EDIT EMPLOYEE MODAL -->
 <div id="editModal" class="modal">
-
     <div class="modal-content">
-
         <div class="modal-header">
 
-            <h3 class="modal-title">
-                Edit Employee
-            </h3>
+            <h3 class="modal-title"> Edit Employee </h3>
 
-            <button class="close-btn"
-                    onclick="closeModal('editModal')">
-                &times;
-            </button>
+            <button class="close-btn" onclick="closeModal('editModal')"> &times; </button>
 
         </div>
 
         <form method="POST" id="editForm">
 
-            <input type="hidden"
-                   name="action"
-                   value="update">
-
-            <input type="hidden"
-                   name="employee_db_id"
-                   id="edit_id">
+            <input type="hidden" name="action" value="update">
+            <input type="hidden" name="employee_db_id" id="edit_id">
 
             <div class="form-row">
 
                 <div class="form-group">
                     <label>First Name *</label>
-
-                    <input type="text"
-                           name="firstname"
-                           id="edit_firstname"
-                           required>
+                    <input type="text" name="firstname" id="edit_firstname" required>
                 </div>
 
                 <div class="form-group">
                     <label>Last Name *</label>
-
-                    <input type="text"
-                           name="lastname"
-                           id="edit_lastname"
-                           required>
+                    <input type="text" name="lastname" id="edit_lastname" required>
                 </div>
 
             </div>
 
             <div class="form-group">
-
                 <label>Email *</label>
-
-                <input type="email"
-                       name="email"
-                       id="edit_email"
-                       required>
-
+                <input type="email" name="email" id="edit_email" required>
             </div>
 
             <div class="form-group">
-
                 <label>Phone</label>
-
-                <input type="text"
-                       name="phone"
-                       id="edit_phone">
-
+                <input type="text" name="phone" id="edit_phone">
             </div>
 
             <div class="form-row">
@@ -644,9 +563,7 @@ function closeModal(id){
 
                     <label>Role *</label>
 
-                    <select name="role_id"
-                            id="edit_role_id"
-                            required>
+                    <select name="role_id" id="edit_role_id" required>
 
                         <?php foreach ($roles as $role): ?>
 
@@ -666,16 +583,12 @@ function closeModal(id){
 
                     <label>Department *</label>
 
-                    <select name="department_id"
-                            id="edit_department_id"
-                            required>
+                    <select name="department_id" id="edit_department_id" required>
 
                         <?php foreach ($departments as $dept): ?>
 
                         <option value="<?php echo $dept['id']; ?>">
-
                             <?php echo htmlspecialchars($dept['department_name']); ?>
-
                         </option>
 
                         <?php endforeach; ?>
@@ -692,16 +605,12 @@ function closeModal(id){
 
                     <label>Shift *</label>
 
-                    <select name="shift_id"
-                            id="edit_shift_id"
-                            required>
+                    <select name="shift_id" id="edit_shift_id" required>
 
                         <?php foreach ($shifts as $shift): ?>
 
                         <option value="<?php echo $shift['id']; ?>">
-
                             <?php echo htmlspecialchars($shift['shift_name']); ?>
-
                         </option>
 
                         <?php endforeach; ?>
@@ -714,43 +623,19 @@ function closeModal(id){
 
                     <label>Status *</label>
 
-                    <select name="status"
-                            id="edit_status"
-                            required>
-
-                        <option value="active">
-                            Active
-                        </option>
-
-                        <option value="inactive">
-                            Inactive
-                        </option>
-
+                    <select name="status" id="edit_status" required>
+                        <option value="active"> Active </option>
+                        <option value="inactive"> Inactive </option>
                     </select>
-
                 </div>
-
             </div>
 
             <div class="form-group">
-
-                <button type="submit"
-                        class="btn btn-primary">
-                    Update Employee
-                </button>
-
-                <button type="button"
-                        class="btn btn-secondary"
-                        onclick="closeModal('editModal')">
-                    Cancel
-                </button>
-
+                <button type="submit" class="btn btn-primary"> Update Employee </button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal('editModal')"> Cancel </button>
             </div>
-
         </form>
-
     </div>
-
 </div>
 
 <script>
