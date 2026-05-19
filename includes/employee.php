@@ -242,7 +242,7 @@ $total_shifts = $stmt->fetchColumn();
                 <i>🎁</i> Incentives
             </a>
         </li>
-
+        
         <li class="nav-item">
             <a href="payroll.php" class="nav-link">
                 <i>📊</i> Payroll
