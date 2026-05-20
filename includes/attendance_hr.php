@@ -375,13 +375,34 @@ $attendance_records = $stmt->fetchAll();
                             <?php echo htmlspecialchars($attendance['firstname'] . ' ' . $attendance['lastname']); ?>
                         </td>
 
-                        <?php for ($day = 1; $day <= 31; $day++): ?>
+                            <?php
+                            $attendance_day = date('d', strtotime($attendance['date']));
+                            ?>
 
-                            <td class="present-cell">
-                                P
-                            </td>
+                            <?php for ($day = 1; $day <= 31; $day++): ?>
 
-                        <?php endfor; ?>
+                                <td>
+                                    <?php if ((int)$attendance_day == $day): ?>
+
+                                        <?php if ($attendance['status'] == 'present'): ?>
+                                            <span class="present-cell">P</span>
+
+                                        <?php elseif ($attendance['status'] == 'late'): ?>
+                                            <span class="late-cell">L</span>
+
+                                        <?php elseif ($attendance['status'] == 'absent'): ?>
+                                            <span class="absent-cell">A</span>
+
+                                        <?php else: ?>
+                                            -
+                                        <?php endif; ?>
+
+                                    <?php else: ?>
+                                        -
+                                    <?php endif; ?>
+                                </td>
+
+                            <?php endfor; ?>
 
                     </tr>
 
