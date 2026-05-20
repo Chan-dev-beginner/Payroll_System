@@ -229,25 +229,19 @@ $payrolls = $pdo->query("
         </li>
         
         <li class="nav-item">
-            <?php if ($user['is_hr'] || $user['is_admin']): ?>
-                <a href="attendance_hr.php" class="nav-link">
-                    <i>⏰</i> Attendance
-                </a>
-            <?php else: ?>
-                <a href="attendance_hr.php" class="nav-link">
+                <a href="attendanceEmployee.php" class="nav-link">
                     <i>⏰</i> My Attendance
                 </a>
-            <?php endif; ?>
         </li>
 
         <li class="nav-item">
             <a href="leave.php" class="nav-link">
-                <i>🏖️</i> Request Leave
+                <i>🏖️</i> My Request Leave
             </a>
         </li>
         <li class="nav-item">
             <a href="payslip.php" class="nav-link">
-                <i>💰</i> Payslip
+                <i>💰</i> My Payslip
             </a>
         </li>
         

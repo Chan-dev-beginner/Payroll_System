@@ -196,14 +196,14 @@ $total_shifts = $stmt->fetchColumn();
         </li>
 
         <li class="nav-item">
-            <a href="attendance.php" class="nav-link">
+            <a href="attendanceEmployee.php" class="nav-link">
                 <i>⏰</i> My Attendance
             </a>
         </li>
 
         <li class="nav-item">
             <a href="leave.php" class="nav-link">
-                <i>🏖️</i> Request Leave
+                <i>🏖️</i> My Request Leave
             </a>
         </li>
 
@@ -226,7 +226,7 @@ $total_shifts = $stmt->fetchColumn();
         </li>
 
         <li class="nav-item">
-            <a href="manage_attendance.php" class="nav-link">
+            <a href="attendance_hr.php" class="nav-link">
                 <i>📋</i> Attendance
             </a>
         </li>
@@ -248,13 +248,6 @@ $total_shifts = $stmt->fetchColumn();
                 <i>📊</i> Payroll
             </a>
         </li>
-
-        <li class="nav-item">
-            <a href="settings.php" class="nav-link">
-                <i>⚙️</i> Settings
-            </a>
-        </li>
-
         <?php endif; ?>
 
         <li class="nav-item" style="margin-top:20px;">
