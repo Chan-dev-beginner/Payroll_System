@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $firstname = trim($_POST['firstname']);
         $lastname = trim($_POST['lastname']);
         $email = trim($_POST['email']);
-        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        $password = $_POST['password'];
         $phone = trim($_POST['phone']);
         $role_id = $_POST['role_id'];
         $department_id = $_POST['department_id'];

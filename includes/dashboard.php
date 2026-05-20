@@ -86,13 +86,13 @@ $recent_leaves = $stmt->fetchAll();
 
                 <?php if ($user['is_hr'] || $user['is_admin']): ?>
 
-                    <a href="attendance_hr.php" class="nav-link">
-                        <i>⏰</i> Attendance
+                    <a href="../includes/attendanceEmployee.php" class="nav-link">
+                        <i>⏰</i> My Attendance
                     </a>
 
                 <?php else: ?>
 
-                    <a href="attendance_hr.php" class="nav-link">
+                    <a href="../includes/attendanceEmployee.php" class="nav-link">
                         <i>⏰</i> My Attendance
                     </a>
 
