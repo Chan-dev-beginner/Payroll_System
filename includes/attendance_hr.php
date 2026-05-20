@@ -1,6 +1,6 @@
 <?php
 // ============================================================
-// ATTENDANCE PAGE (FULL SIDEBAR + FIXED FEATURES)
+// ATTENDANCE PAGE (HR CAN SEE ALL + EMPLOYEE OWN VIEW)
 // ============================================================
 
 require_once('../config/database.php');
@@ -19,36 +19,36 @@ $year = $_GET['year'] ?? date('Y');
 $all_months = isset($_GET['all_months']);
 
 // ============================================================
-// QUERY
+// BUILD QUERY (IMPORTANT FIX HERE)
 // ============================================================
 
-if ($all_months) {
+$params = [];
 
-    $stmt = $pdo->prepare("
-        SELECT attendance.*, employees.firstname, employees.lastname
-        FROM attendance
-        JOIN employees ON attendance.employee_id = employees.id
-        WHERE attendance.employee_id = ?
-        AND YEAR(attendance.date) = ?
-        ORDER BY attendance.date DESC
-    ");
+$sql = "
+    SELECT attendance.*, employees.firstname, employees.lastname
+    FROM attendance
+    JOIN employees ON attendance.employee_id = employees.id
+    WHERE YEAR(attendance.date) = ?
+";
 
-    $stmt->execute([$user['id'], $year]);
+$params[] = $year;
 
-} else {
-
-    $stmt = $pdo->prepare("
-        SELECT attendance.*, employees.firstname, employees.lastname
-        FROM attendance
-        JOIN employees ON attendance.employee_id = employees.id
-        WHERE attendance.employee_id = ?
-        AND MONTH(attendance.date) = ?
-        AND YEAR(attendance.date) = ?
-        ORDER BY attendance.date DESC
-    ");
-
-    $stmt->execute([$user['id'], $month, $year]);
+// if NOT HR/Admin → only show own records
+if (!$user['is_hr'] && !$user['is_admin']) {
+    $sql .= " AND attendance.employee_id = ? ";
+    $params[] = $user['id'];
 }
+
+// month filter (only if NOT all months)
+if (!$all_months) {
+    $sql .= " AND MONTH(attendance.date) = ? ";
+    $params[] = $month;
+}
+
+$sql .= " ORDER BY attendance.date DESC";
+
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
 
 $attendance_records = $stmt->fetchAll();
 
@@ -59,7 +59,7 @@ $attendance_records = $stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Attendance - Payroll System</title>
+    <title>Attendance System</title>
 
     <link rel="stylesheet" href="../assets/dashboard.css">
 
@@ -84,7 +84,7 @@ $attendance_records = $stmt->fetchAll();
 <body class="dashboard">
 
 <!-- ============================================================ -->
-<!-- SIDEBAR (FULL COPIED FROM DASHBOARD - NOT REMOVED) -->
+<!-- SIDEBAR (UNCHANGED - FULL DASHBOARD FEATURES) -->
 <!-- ============================================================ -->
 <aside class="sidebar">
 
@@ -101,7 +101,6 @@ $attendance_records = $stmt->fetchAll();
             </a>
         </li>
 
-        <!-- ALL USERS FEATURES -->
         <li class="nav-item">
             <a href="../includes/attendanceEmployee.php" class="nav-link active">
                 <i>⏰</i> My Attendance
@@ -110,59 +109,32 @@ $attendance_records = $stmt->fetchAll();
 
         <li class="nav-item">
             <a href="leave.php" class="nav-link">
-                <i>🏖️</i> My Request Leave
+                <i>🏖️</i> Request Leave
             </a>
         </li>
 
         <li class="nav-item">
             <a href="payslip.php" class="nav-link">
-                <i>💰</i> My Payslip
+                <i>💰</i> Payslip
             </a>
         </li>
 
-        <!-- HR / ADMIN -->
         <?php if ($user['is_hr'] || $user['is_admin']): ?>
 
             <li class="nav-item" style="margin-top: 20px; padding: 10px 20px; color: rgba(255,255,255,0.5); font-size: 12px;">
                 HR MANAGEMENT
             </li>
 
-            <li class="nav-item">
-                <a href="employee.php" class="nav-link">
-                    <i>👥</i> Employees
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a href="attendance_hr.php" class="nav-link">
-                    <i>📋</i> Attendance
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a href="manage_leaves.php" class="nav-link">
-                    <i>✅</i> Leave Approval
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a href="manage_incentives.php" class="nav-link">
-                    <i>🎁</i> Incentives
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a href="payroll.php" class="nav-link">
-                    <i>📊</i> Payroll
-                </a>
-            </li>
+            <li class="nav-item"><a href="employee.php" class="nav-link">👥 Employees</a></li>
+            <li class="nav-item"><a href="attendance_hr.php" class="nav-link">📋 Attendance</a></li>
+            <li class="nav-item"><a href="manage_leaves.php" class="nav-link">✅ Leave Approval</a></li>
+            <li class="nav-item"><a href="manage_incentives.php" class="nav-link">🎁 Incentives</a></li>
+            <li class="nav-item"><a href="payroll.php" class="nav-link">📊 Payroll</a></li>
 
         <?php endif; ?>
 
         <li class="nav-item" style="margin-top: 20px;">
-            <a href="logout.php" class="nav-link">
-                <i>🚪</i> Logout
-            </a>
+            <a href="logout.php" class="nav-link">🚪 Logout</a>
         </li>
 
     </ul>
@@ -186,7 +158,7 @@ $attendance_records = $stmt->fetchAll();
 <main class="main-content">
 
     <div class="topbar">
-        <h1>My Attendance</h1>
+        <h1>Attendance Records</h1>
         <div><?= date('l, F d, Y'); ?></div>
     </div>
 
@@ -195,11 +167,13 @@ $attendance_records = $stmt->fetchAll();
 
         <form method="GET">
 
+            <?php if ($user['is_hr'] || $user['is_admin']): ?>
             <label>
                 <input type="checkbox" name="all_months"
                     <?= $all_months ? 'checked' : '' ?>>
                 Show All Months (This Year)
             </label>
+            <?php endif; ?>
 
             <br><br>
 
@@ -220,9 +194,7 @@ $attendance_records = $stmt->fetchAll();
                 <option value="2026" <?= $year==2026?'selected':'' ?>>2026</option>
             </select>
 
-            <button type="submit" class="btn btn-success">
-                Filter
-            </button>
+            <button type="submit" class="btn btn-success">Filter</button>
 
         </form>
 
@@ -240,7 +212,11 @@ $attendance_records = $stmt->fetchAll();
             <thead>
                 <tr>
                     <th>Date</th>
-                    <th>Employee</th>
+
+                    <?php if ($user['is_hr'] || $user['is_admin']): ?>
+                        <th>Employee</th>
+                    <?php endif; ?>
+
                     <th>Time In</th>
                     <th>Time Out</th>
                     <th>Hours</th>
@@ -256,12 +232,12 @@ $attendance_records = $stmt->fetchAll();
 
                     <td><?= date('M d, Y', strtotime($row['date'])) ?></td>
 
-                    <td><?= htmlspecialchars($row['firstname'].' '.$row['lastname']) ?></td>
+                    <?php if ($user['is_hr'] || $user['is_admin']): ?>
+                        <td><?= htmlspecialchars($row['firstname'].' '.$row['lastname']) ?></td>
+                    <?php endif; ?>
 
                     <td><?= $row['time_in'] ? date('h:i A', strtotime($row['time_in'])) : '-' ?></td>
-
                     <td><?= $row['time_out'] ? date('h:i A', strtotime($row['time_out'])) : '-' ?></td>
-
                     <td><?= $row['hours_worked'] ?? 0 ?> hrs</td>
 
                     <td>
