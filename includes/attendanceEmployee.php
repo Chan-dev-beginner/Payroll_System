@@ -1,6 +1,6 @@
 <?php
 // ============================================================
-// EMPLOYEE ATTENDANCE (TIME IN / TIME OUT)
+// EMPLOYEE ATTENDANCE (TIME IN / TIME OUT + HISTORY)
 // ============================================================
 
 require_once('../config/database.php');
@@ -29,6 +29,7 @@ $stmt->execute([$user['id'], $today]);
 
 $attendance = $stmt->fetch();
 
+
 // ============================================================
 // TIME IN
 // ============================================================
@@ -36,9 +37,7 @@ $attendance = $stmt->fetch();
 if (isset($_POST['time_in'])) {
 
     if ($attendance) {
-
         $error = "Already timed in today.";
-
     } else {
 
         $stmt = $pdo->prepare("
@@ -48,24 +47,19 @@ if (isset($_POST['time_in'])) {
                 time_in,
                 status
             )
-            VALUES (
-                ?, ?, NOW(), 'present'
-            )
+            VALUES (?, ?, NOW(), 'present')
         ");
 
-        $stmt->execute([
-            $user['id'],
-            $today
-        ]);
+        $stmt->execute([$user['id'], $today]);
 
         $message = "Time In successful!";
-
         header("Refresh:1");
     }
 }
 
+
 // ============================================================
-// REFRESH ATTENDANCE DATA
+// REFRESH TODAY DATA
 // ============================================================
 
 $stmt = $pdo->prepare("
@@ -74,12 +68,10 @@ $stmt = $pdo->prepare("
     WHERE employee_id = ? AND date = ?
 ");
 
-$stmt->execute([
-    $user['id'],
-    $today
-]);
+$stmt->execute([$user['id'], $today]);
 
 $attendance = $stmt->fetch();
+
 
 // ============================================================
 // TIME OUT
@@ -88,14 +80,12 @@ $attendance = $stmt->fetch();
 if (isset($_POST['time_out'])) {
 
     if (!$attendance) {
-
         $error = "You need to Time In first.";
-
-    } elseif ($attendance['time_out']) {
-
+    }
+    elseif ($attendance['time_out']) {
         $error = "Already timed out.";
-
-    } else {
+    }
+    else {
 
         $stmt = $pdo->prepare("
             UPDATE attendance
@@ -105,15 +95,30 @@ if (isset($_POST['time_out'])) {
             WHERE id = ?
         ");
 
-        $stmt->execute([
-            $attendance['id']
-        ]);
+        $stmt->execute([$attendance['id']]);
 
         $message = "Time Out successful!";
-
         header("Refresh:1");
     }
 }
+
+
+// ============================================================
+// GET ATTENDANCE HISTORY (LAST 30 DAYS)
+// ============================================================
+
+$stmt = $pdo->prepare("
+    SELECT *
+    FROM attendance
+    WHERE employee_id = ?
+    ORDER BY date DESC
+    LIMIT 30
+");
+
+$stmt->execute([$user['id']]);
+
+$attendance_history = $stmt->fetchAll();
+
 ?>
 
 <!DOCTYPE html>
@@ -123,18 +128,13 @@ if (isset($_POST['time_out'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Attendance - Payroll System</title>
 
-    <!-- SAME DASHBOARD CSS -->
     <link rel="stylesheet" href="../assets/dashboard.css">
 
     <style>
 
         .attendance-card {
-            max-width: 600px;
+            max-width: 900px;
             margin-top: 20px;
-        }
-
-        .attendance-info {
-            margin-bottom: 20px;
         }
 
         .attendance-info p {
@@ -146,10 +146,6 @@ if (isset($_POST['time_out'])) {
             display: flex;
             gap: 15px;
             margin-top: 20px;
-        }
-
-        .attendance-buttons form {
-            display: inline;
         }
 
         .btn-disabled {
@@ -165,6 +161,32 @@ if (isset($_POST['time_out'])) {
 
         .status-notin {
             color: #dc3545;
+            font-weight: bold;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .status-completed {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-progress {
+            color: orange;
             font-weight: bold;
         }
 
@@ -209,8 +231,7 @@ if (isset($_POST['time_out'])) {
 
         <?php if ($user['is_hr'] || $user['is_admin']): ?>
 
-            <li class="nav-item"
-                style="margin-top: 20px; padding: 10px 20px; color: rgba(255,255,255,0.5); font-size: 12px; font-weight: bold;">
+            <li class="nav-item" style="margin-top: 20px; padding: 10px 20px; color: rgba(255,255,255,0.5); font-size: 12px;">
                 HR MANAGEMENT
             </li>
 
@@ -256,22 +277,13 @@ if (isset($_POST['time_out'])) {
 
     <div class="user-info">
 
-        <strong>
-            <?php echo htmlspecialchars($user['name']); ?>
-        </strong>
-
-        <small>
-            <?php echo htmlspecialchars($user['email']); ?>
-        </small>
+        <strong><?= htmlspecialchars($user['name']); ?></strong>
+        <small><?= htmlspecialchars($user['email']); ?></small>
 
         <?php if ($user['is_admin']): ?>
-
             <span class="badge badge-admin">ADMIN</span>
-
         <?php elseif ($user['is_hr']): ?>
-
             <span class="badge badge-hr">HR</span>
-
         <?php endif; ?>
 
     </div>
@@ -281,84 +293,44 @@ if (isset($_POST['time_out'])) {
 <!-- MAIN CONTENT -->
 <main class="main-content">
 
-    <!-- TOPBAR -->
     <div class="topbar">
-
         <h1>My Attendance</h1>
-
-        <div>
-            <?php echo date('l, F d, Y'); ?>
-        </div>
-
+        <div><?= date('l, F d, Y'); ?></div>
     </div>
 
-    <!-- ALERTS -->
     <?php if ($message): ?>
-
-        <div class="alert alert-success">
-            <?php echo $message; ?>
-        </div>
-
+        <div class="alert alert-success"><?= $message ?></div>
     <?php endif; ?>
 
     <?php if ($error): ?>
-
-        <div class="alert alert-danger">
-            <?php echo $error; ?>
-        </div>
-
+        <div class="alert alert-danger"><?= $error ?></div>
     <?php endif; ?>
 
-    <!-- ATTENDANCE CARD -->
+    <!-- TODAY ATTENDANCE -->
     <div class="card attendance-card">
 
         <div class="card-header">
-            <h3 class="card-title">⏰ Attendance Tracker</h3>
+            <h3 class="card-title">⏰ Today Attendance</h3>
         </div>
 
         <div class="attendance-info">
 
             <?php if (!$attendance): ?>
 
-                <p>
-                    <strong>Status:</strong>
-                    <span class="status-notin">
-                        Not Timed In
-                    </span>
-                </p>
+                <p><b>Status:</b> <span class="status-notin">Not Timed In</span></p>
 
             <?php else: ?>
 
-                <p>
-                    <strong>Time In:</strong>
-                    <?php echo date('h:i A', strtotime($attendance['time_in'])); ?>
-                </p>
+                <p><b>Time In:</b> <?= date('h:i A', strtotime($attendance['time_in'])) ?></p>
 
                 <?php if ($attendance['time_out']): ?>
 
-                    <p>
-                        <strong>Time Out:</strong>
-                        <?php echo date('h:i A', strtotime($attendance['time_out'])); ?>
-                    </p>
-
-                    <p>
-                        <strong>Hours Worked:</strong>
-                        <?php echo $attendance['hours_worked']; ?> hrs
-                    </p>
-
-                    <p>
-                        <strong>Status:</strong>
-                        Completed Shift
-                    </p>
+                    <p><b>Time Out:</b> <?= date('h:i A', strtotime($attendance['time_out'])) ?></p>
+                    <p><b>Hours:</b> <?= $attendance['hours_worked'] ?> hrs</p>
 
                 <?php else: ?>
 
-                    <p>
-                        <strong>Status:</strong>
-                        <span class="status-working">
-                            Currently Working
-                        </span>
-                    </p>
+                    <p><b>Status:</b> <span class="status-working">Currently Working</span></p>
 
                 <?php endif; ?>
 
@@ -366,64 +338,90 @@ if (isset($_POST['time_out'])) {
 
         </div>
 
-        <!-- BUTTONS -->
         <div class="attendance-buttons">
 
-            <!-- TIME IN BUTTON -->
+            <!-- TIME IN -->
             <form method="POST">
-
                 <?php if (!$attendance): ?>
-
-                    <button
-                        type="submit"
-                        name="time_in"
-                        class="btn btn-primary"
-                    >
-                        🟢 Time In
-                    </button>
-
+                    <button class="btn btn-primary" name="time_in">🟢 Time In</button>
                 <?php else: ?>
-
-                    <button
-                        type="button"
-                        class="btn btn-disabled"
-                        disabled
-                    >
-                        🟢 Time In
-                    </button>
-
+                    <button class="btn btn-disabled" disabled>🟢 Time In</button>
                 <?php endif; ?>
-
             </form>
 
-            <!-- TIME OUT BUTTON -->
+            <!-- TIME OUT -->
             <form method="POST">
-
                 <?php if ($attendance && !$attendance['time_out']): ?>
-
-                    <button
-                        type="submit"
-                        name="time_out"
-                        class="btn btn-secondary"
-                    >
-                        🔴 Time Out
-                    </button>
-
+                    <button class="btn btn-secondary" name="time_out">🔴 Time Out</button>
                 <?php else: ?>
-
-                    <button
-                        type="button"
-                        class="btn btn-disabled"
-                        disabled
-                    >
-                        🔴 Time Out
-                    </button>
-
+                    <button class="btn btn-disabled" disabled>🔴 Time Out</button>
                 <?php endif; ?>
-
             </form>
 
         </div>
+
+    </div>
+
+    <!-- ATTENDANCE HISTORY -->
+    <div class="card attendance-card">
+
+        <div class="card-header">
+            <h3 class="card-title">📅 My Attendance History</h3>
+        </div>
+
+        <?php if (empty($attendance_history)): ?>
+
+            <p>No attendance records found.</p>
+
+        <?php else: ?>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time In</th>
+                            <th>Time Out</th>
+                            <th>Hours</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <?php foreach ($attendance_history as $row): ?>
+
+                            <tr>
+
+                                <td><?= date('M d, Y', strtotime($row['date'])) ?></td>
+
+                                <td><?= $row['time_in'] ? date('h:i A', strtotime($row['time_in'])) : '-' ?></td>
+
+                                <td><?= $row['time_out'] ? date('h:i A', strtotime($row['time_out'])) : '-' ?></td>
+
+                                <td><?= $row['hours_worked'] ?? 0 ?> hrs</td>
+
+                                <td>
+                                    <?php if ($row['time_out']): ?>
+                                        <span class="status-completed">Completed</span>
+                                    <?php else: ?>
+                                        <span class="status-progress">In Progress</span>
+                                    <?php endif; ?>
+                                </td>
+
+                            </tr>
+
+                        <?php endforeach; ?>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        <?php endif; ?>
 
     </div>
 
