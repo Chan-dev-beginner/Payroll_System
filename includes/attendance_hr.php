@@ -16,10 +16,11 @@ $user = getCurrentUser();
 // ============================================================
 
 $stmt = $pdo->prepare("
-    SELECT *
+    SELECT attendance.*, employees.firstname, employees.lastname
     FROM attendance
-    WHERE employee_id = ?
-    ORDER BY date DESC
+    JOIN employees ON attendance.employee_id = employees.id
+    WHERE attendance.employee_id = ?
+    ORDER BY attendance.date DESC
 ");
 $stmt->execute([$user['id']]);
 $attendance_records = $stmt->fetchAll();
@@ -371,7 +372,7 @@ $attendance_records = $stmt->fetchAll();
                         </td>
 
                         <td>
-                            EMP Contract
+                            <?php echo htmlspecialchars($attendance['firstname'] . ' ' . $attendance['lastname']); ?>
                         </td>
 
                         <?php for ($day = 1; $day <= 31; $day++): ?>
