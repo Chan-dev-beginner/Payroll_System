@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 18, 2026 at 12:46 PM
+-- Generation Time: May 20, 2026 at 11:21 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -37,6 +37,16 @@ CREATE TABLE `attendance` (
   `status` varchar(20) DEFAULT 'present' COMMENT 'present, absent, late',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `attendance`
+--
+
+INSERT INTO `attendance` (`id`, `employee_id`, `date`, `time_in`, `time_out`, `hours_worked`, `status`, `created_at`) VALUES
+(1, 1, '2026-05-20', '07:42:37', '07:42:50', 0.00, 'present', '2026-05-20 05:42:37'),
+(2, 5, '2026-05-20', '08:28:48', '08:28:55', 0.00, 'present', '2026-05-20 06:28:48'),
+(3, 2, '2026-05-20', '08:29:31', '08:31:38', 0.04, 'present', '2026-05-20 06:29:31'),
+(6, 6, '2026-05-20', '16:04:02', '16:40:22', 0.00, 'present', '2026-05-20 08:04:02');
 
 -- --------------------------------------------------------
 
@@ -92,7 +102,8 @@ CREATE TABLE `employees` (
 INSERT INTO `employees` (`id`, `employee_id`, `firstname`, `lastname`, `email`, `password`, `phone`, `role_id`, `department_id`, `shift_id`, `hire_date`, `status`, `is_hr`, `is_admin`, `created_at`) VALUES
 (1, 'EMP001', 'Admin', 'User', 'admin@company.com', 'admin123', '', 1, 1, 3, '2024-01-01', 'active', 1, 1, '2026-05-13 01:40:24'),
 (2, 'EMP002', 'Juan', 'Dela Cruz', 'juan@company.com', 'pass123', '123456789', 3, 2, 2, '2024-02-15', 'active', 0, 0, '2026-05-13 01:40:39'),
-(5, 'EMP666', 'chan', 'chan', 'chan@company.com', 'qwerty123', '', 1, 2, 2, '2026-05-18', 'active', 0, 0, '2026-05-18 10:25:37');
+(5, 'EMP666', 'chan', 'chan', 'chan@company.com', 'qwerty123', '', 1, 2, 2, '2026-05-18', 'active', 0, 0, '2026-05-18 10:25:37'),
+(6, 'EMP692', 'Leah', 'Fernandez', 'leah@company.com', '123', '12345678899', 5, 5, 3, '2026-05-20', 'active', 0, 0, '2026-05-20 07:56:48');
 
 -- --------------------------------------------------------
 
@@ -116,7 +127,6 @@ CREATE TABLE `incentive_types` (
 
 INSERT INTO `incentive_types` (`id`, `incentive_name`, `description`, `created_at`, `employee_id`, `amount`, `date_given`) VALUES
 (1, 'Performance Bonus', 'Monthly performance-based bonus', '2026-05-13 01:39:19', 1, 100.00, '2026-05-18'),
-(2, 'Sales Commission', 'Commission from sales', '2026-05-13 01:39:19', 1, 500.00, '2026-05-18'),
 (3, 'Attendance Bonus', 'Perfect attendance reward', '2026-05-13 01:39:19', 1, 100.00, '2026-05-18'),
 (4, 'Holiday Bonus', '13th month pay or holiday bonus', '2026-05-13 01:39:19', 1, 1200.00, '2026-05-18'),
 (5, 'Overtime Pay', 'Additional pay for overtime work', '2026-05-13 01:39:19', 1, 70.00, '2026-05-18');
@@ -190,6 +200,16 @@ CREATE TABLE `payroll` (
   `status` varchar(20) DEFAULT 'draft' COMMENT 'draft, finalized, paid',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `payroll`
+--
+
+INSERT INTO `payroll` (`id`, `employee_id`, `month_year`, `basic_salary`, `total_incentives`, `total_deductions`, `days_worked`, `days_absent`, `paid_leaves`, `unpaid_leaves`, `total_hours`, `overtime_hours`, `gross_pay`, `net_pay`, `status`, `created_at`) VALUES
+(2, 5, '2026-05-01', 2272.73, 0.00, 340.91, 1, 0, 0, 0, 0.00, 0.00, 2272.73, 1931.82, 'finalized', '2026-05-20 06:50:14'),
+(3, 1, '2026-05-01', 2272.73, 1470.00, 561.41, 1, 0, 0, 0, 0.00, 0.00, 3742.73, 3181.32, 'draft', '2026-05-20 07:11:26'),
+(4, 2, '2026-05-01', 1136.36, 0.00, 170.45, 1, 0, 0, 0, 0.04, 0.00, 1136.36, 965.91, 'draft', '2026-05-20 07:11:32'),
+(5, 6, '2026-05-01', 545.45, 0.00, 81.82, 1, 0, 0, 0, 0.00, 0.00, 545.45, 463.64, 'draft', '2026-05-20 08:27:21');
 
 -- --------------------------------------------------------
 
@@ -316,7 +336,7 @@ ALTER TABLE `shifts`
 -- AUTO_INCREMENT for table `attendance`
 --
 ALTER TABLE `attendance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `departments`
@@ -328,7 +348,7 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `incentive_types`
@@ -352,7 +372,7 @@ ALTER TABLE `leave_types`
 -- AUTO_INCREMENT for table `payroll`
 --
 ALTER TABLE `payroll`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `roles`
