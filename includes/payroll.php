@@ -426,6 +426,12 @@ $payrolls = $pdo->query("
                                 </span>
                             </td>
                             <td class="action-buttons">
+                                <button 
+                                    type="button"
+                                    class="btn btn-info btn-sm"
+                                    onclick='showDetails(<?= json_encode($p) ?>)'>
+                                    📄 Details
+                                </button>
                                 <?php if ($p['status'] == 'draft'): ?>
                                 <a href="?finalize=<?php echo $p['id']; ?>" 
                                    class="btn btn-success btn-sm"
@@ -448,6 +454,74 @@ $payrolls = $pdo->query("
     </div>
 
 </main>
+<!-- PAYROLL DETAILS MODAL -->
+<div id="payrollModal" style="
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+">
 
+    <div style="
+        background:#fff;
+        width:500px;
+        padding:20px;
+        border-radius:10px;
+        max-height:80vh;
+        overflow:auto;
+    ">
+
+        <h3>📄 Payroll Breakdown</h3>
+
+        <div id="modalContent"></div>
+
+        <br>
+
+        <button onclick="closeDetails()" class="btn btn-danger btn-sm">
+            Close
+        </button>
+
+    </div>
+</div>
+
+<script>
+function showDetails(p) {
+
+    document.getElementById("modalContent").innerHTML = `
+        <p><b>Employee:</b> ${p.employee_name}</p>
+        <p><b>Role:</b> ${p.role_name}</p>
+        <p><b>Month:</b> ${p.month_year}</p>
+
+        <hr>
+
+        <h4>📊 Attendance</h4>
+        <p>Days Worked: ${p.days_worked}</p>
+        <p>Days Absent: ${p.days_absent}</p>
+        <p>Paid Leaves: ${p.paid_leaves}</p>
+        <p>Unpaid Leaves: ${p.unpaid_leaves}</p>
+
+        <hr>
+
+        <h4>💰 Computation</h4>
+        <p>Basic Salary: ₱${parseFloat(p.basic_salary).toFixed(2)}</p>
+        <p>Incentives: ₱${parseFloat(p.total_incentives).toFixed(2)}</p>
+        <p>Gross Pay: ₱${parseFloat(p.gross_pay).toFixed(2)}</p>
+        <p style="color:red;">Deductions: ₱${parseFloat(p.total_deductions).toFixed(2)}</p>
+        <p style="color:green;"><b>Net Pay: ₱${parseFloat(p.net_pay).toFixed(2)}</b></p>
+    `;
+
+    document.getElementById("payrollModal").style.display = "flex";
+}
+
+function closeDetails() {
+    document.getElementById("payrollModal").style.display = "none";
+}
+</script>
 </body>
 </html>
