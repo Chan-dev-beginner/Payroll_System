@@ -359,8 +359,8 @@ ALTER TABLE `incentive_types`
 --
 -- AUTO_INCREMENT for table `leave_requests`
 --
-ALTER TABLE `leave_requests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE leave_requests
+  ADD employee_name VARCHAR(100) AFTER employee_id;
 
 --
 -- AUTO_INCREMENT for table `leave_types`
