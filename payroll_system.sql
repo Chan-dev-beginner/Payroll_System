@@ -100,10 +100,10 @@ CREATE TABLE `employees` (
 --
 
 INSERT INTO `employees` (`id`, `employee_id`, `firstname`, `lastname`, `email`, `password`, `phone`, `role_id`, `department_id`, `shift_id`, `hire_date`, `status`, `is_hr`, `is_admin`, `created_at`) VALUES
-(1, 'EMP001', 'Admin', 'User', 'admin@company.com', 'admin123', '', 1, 1, 3, '2024-01-01', 'active', 1, 1, '2026-05-13 01:40:24'),
+(1, 'EMP001', 'Admin', 'User', 'admin@company.com', 'admin123', '', 1, 1, 2, '2024-01-01', 'active', 1, 1, '2026-05-13 01:40:24'),
 (2, 'EMP002', 'Juan', 'Dela Cruz', 'juan@company.com', 'pass123', '123456789', 3, 2, 2, '2024-02-15', 'active', 0, 0, '2026-05-13 01:40:39'),
 (5, 'EMP666', 'chan', 'chan', 'chan@company.com', 'qwerty123', '', 1, 2, 2, '2026-05-18', 'active', 0, 0, '2026-05-18 10:25:37'),
-(6, 'EMP692', 'Leah', 'Fernandez', 'leah@company.com', '123', '12345678899', 5, 5, 3, '2026-05-20', 'active', 0, 0, '2026-05-20 07:56:48');
+(6, 'EMP692', 'Leah', 'Fernandez', 'leah@company.com', '123', '12345678899', 5, 5, 2, '2026-05-20', 'active', 0, 0, '2026-05-20 07:56:48');
 
 -- --------------------------------------------------------
 
