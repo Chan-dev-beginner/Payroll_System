@@ -108,13 +108,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <li class="nav-item">
             <a href="leave.php" class="nav-link">
-                <i>🏖️</i> Request Leave
+                <i>🏖️</i> My Request Leave
             </a>
         </li>
 
         <li class="nav-item">
             <a href="payslip.php" class="nav-link">
-                <i>💰</i> Payslip
+                <i>💰</i> My Payslip
             </a>
         </li>
 

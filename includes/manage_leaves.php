@@ -28,7 +28,7 @@ $leave_requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Management</title>
+    <title>Manage Leaves</title>
 
     <link rel="stylesheet" href="../assets/dashboard.css">
 </head>
