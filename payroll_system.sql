@@ -256,9 +256,8 @@ CREATE TABLE `shifts` (
 --
 
 INSERT INTO `shifts` (`id`, `shift_name`, `time_in`, `time_out`, `created_at`) VALUES
-(1, 'Morning Shift', '06:00:00', '14:00:00', '2026-05-13 01:38:28'),
-(2, 'Day Shift', '08:00:00', '17:00:00', '2026-05-13 01:38:28'),
-(3, 'Night Shift', '20:00:00', '04:00:00', '2026-05-13 01:38:28');
+(1, 'Day Shift', '08:00:00', '17:00:00', '2026-05-13 01:38:28'),
+(2, 'Night Shift', '20:00:00', '04:00:00', '2026-05-13 01:38:28');
 
 --
 -- Indexes for dumped tables
