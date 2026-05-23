@@ -7,9 +7,7 @@ require_once('../config/session.php');
 
 requireHR(); // Only HR/Admin
 
-// CURRENT USER
 $user = getCurrentUser();
-
 
 $message = '';
 $error = '';
@@ -17,13 +15,11 @@ $error = '';
 // ============================================================
 // FILTER MONTH
 // ============================================================
-
 $selected_month = isset($_GET['month']) ? $_GET['month'] : 'all';
 
 // ============================================================
 // FETCH LEAVE REQUESTS
 // ============================================================
-
 if ($selected_month == 'all') {
 
     $stmt = $pdo->query("
@@ -31,7 +27,8 @@ if ($selected_month == 'all') {
             lr.*,
             e.firstname,
             e.lastname,
-            lt.leave_name
+            lt.leave_name,
+            lt.is_paid
         FROM leave_requests lr
         JOIN employees e ON lr.employee_id = e.id
         JOIN leave_types lt ON lr.leave_type_id = lt.id
@@ -45,7 +42,8 @@ if ($selected_month == 'all') {
             lr.*,
             e.firstname,
             e.lastname,
-            lt.leave_name
+            lt.leave_name,
+            lt.is_paid
         FROM leave_requests lr
         JOIN employees e ON lr.employee_id = e.id
         JOIN leave_types lt ON lr.leave_type_id = lt.id
@@ -65,7 +63,6 @@ $leave_requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Leaves</title>
-
     <link rel="stylesheet" href="../assets/dashboard.css">
 </head>
 
@@ -78,7 +75,7 @@ $leave_requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <h2>💼 Payroll System</h2>
         <p>HR Management</p>
     </div>
-        
+
     <ul class="nav-menu">
 
         <li class="nav-item">
@@ -140,6 +137,7 @@ $leave_requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <i>📊</i> Payroll
             </a>
         </li>
+
         <?php endif; ?>
 
         <li class="nav-item" style="margin-top:20px;">
@@ -152,10 +150,11 @@ $leave_requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <div class="user-info">
 
-    <strong>
-        <?php echo htmlspecialchars($user['firstname'] . ' ' . $user['lastname']); ?>
-    </strong>
-        <small> <?php echo htmlspecialchars($user['email']); ?> </small>
+        <strong>
+            <?php echo htmlspecialchars($user['firstname'] . ' ' . $user['lastname']); ?>
+        </strong>
+
+        <small><?php echo htmlspecialchars($user['email']); ?></small>
 
         <?php if ($user['is_admin']): ?>
             <span class="badge badge-admin">ADMIN</span>
@@ -166,175 +165,104 @@ $leave_requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
 </aside>
+
 <!-- MAIN CONTENT -->
- <main class="main-content">
-        <!-- TOPBAR -->
+<main class="main-content">
+
     <div class="topbar">
         <h1>Leave Approval Management</h1>
     </div>
 
     <div class="card">
 
-        <!-- ALERTS -->
-        <?php if($message): ?>
-            <div class="alert alert-success">
-                <?php echo $message; ?>
-            </div>
-        <?php endif; ?>
-
-        <?php if($error): ?>
-            <div class="alert alert-danger">
-                <?php echo $error; ?>
-            </div>
-        <?php endif; ?>
-
         <!-- MONTH FILTER -->
         <form method="GET" style="margin-bottom:20px;">
-
             <label><strong>Filter By Month:</strong></label>
 
             <select name="month">
-
-                <option value="all"
-                    <?= ($selected_month == 'all') ? 'selected' : ''; ?>>
+                <option value="all" <?= ($selected_month == 'all') ? 'selected' : ''; ?>>
                     Show All Leaves
                 </option>
 
-                <option value="1" <?= ($selected_month == '1') ? 'selected' : ''; ?>>
-                    January
-                </option>
-
-                <option value="2" <?= ($selected_month == '2') ? 'selected' : ''; ?>>
-                    February
-                </option>
-
-                <option value="3" <?= ($selected_month == '3') ? 'selected' : ''; ?>>
-                    March
-                </option>
-
-                <option value="4" <?= ($selected_month == '4') ? 'selected' : ''; ?>>
-                    April
-                </option>
-
-                <option value="5" <?= ($selected_month == '5') ? 'selected' : ''; ?>>
-                    May
-                </option>
-
-                <option value="6" <?= ($selected_month == '6') ? 'selected' : ''; ?>>
-                    June
-                </option>
-
-                <option value="7" <?= ($selected_month == '7') ? 'selected' : ''; ?>>
-                    July
-                </option>
-
-                <option value="8" <?= ($selected_month == '8') ? 'selected' : ''; ?>>
-                    August
-                </option>
-
-                <option value="9" <?= ($selected_month == '9') ? 'selected' : ''; ?>>
-                    September
-                </option>
-
-                <option value="10" <?= ($selected_month == '10') ? 'selected' : ''; ?>>
-                    October
-                </option>
-
-                <option value="11" <?= ($selected_month == '11') ? 'selected' : ''; ?>>
-                    November
-                </option>
-
-                <option value="12" <?= ($selected_month == '12') ? 'selected' : ''; ?>>
-                    December
-                </option>
-
+                <?php for ($i = 1; $i <= 12; $i++): ?>
+                    <option value="<?= $i ?>" <?= ($selected_month == $i) ? 'selected' : ''; ?>>
+                        <?= date('F', mktime(0,0,0,$i,1)) ?>
+                    </option>
+                <?php endfor; ?>
             </select>
 
-            <button type="submit" class="btn btn-primary">
-                Filter
-            </button>
-
+            <button type="submit" class="btn btn-primary">Filter</button>
         </form>
 
-
         <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Employee ID</th>
-                <th>Leave Type</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Total Days</th>
-                <th>Reason</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Employee</th>
+                    <th>Leave Type</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Total Days</th>
+                    <th>Reason</th>
+                    <th>Paid / Unpaid</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
 
-<?php foreach($leave_requests as $leave): ?>
+            <tbody>
 
-<tr>
+            <?php foreach($leave_requests as $leave): ?>
 
-    <td><?php echo $leave['id']; ?></td>
+                <tr>
+                    <td><?= $leave['id']; ?></td>
 
-    <td><?php echo htmlspecialchars($leave['firstname'] . ' ' . $leave['lastname']); ?> </td>
+                    <td>
+                        <?= htmlspecialchars($leave['firstname'] . ' ' . $leave['lastname']); ?>
+                    </td>
 
-    <td><?php echo htmlspecialchars($leave['leave_name']); ?></td>
+                    <td><?= htmlspecialchars($leave['leave_name']); ?></td>
 
-    <td><?php echo $leave['start_date']; ?></td>
+                    <td><?= $leave['start_date']; ?></td>
+                    <td><?= $leave['end_date']; ?></td>
+                    <td><?= $leave['total_days']; ?></td>
 
-    <td><?php echo $leave['end_date']; ?></td>
+                    <td><?= htmlspecialchars($leave['reason']); ?></td>
 
-    <td><?php echo $leave['total_days']; ?></td>
+                    <!-- ✅ PAID / UNPAID -->
+                    <td>
+                        <?php if ($leave['is_paid'] == 1): ?>
+                            <span style="color:green; font-weight:bold;">Paid</span>
+                        <?php else: ?>
+                            <span style="color:red; font-weight:bold;">Unpaid</span>
+                        <?php endif; ?>
+                    </td>
 
-    <td><?php echo htmlspecialchars($leave['reason']); ?></td>
+                    <td>
+                        <span class="status status-<?= $leave['status']; ?>">
+                            <?= ucfirst($leave['status']); ?>
+                        </span>
+                    </td>
 
-    <td>
-        <span class="status status-<?php echo $leave['status']; ?>">
-            <?php echo ucfirst($leave['status']); ?>
-        </span>
-    </td>
+                    <td>
+                        <?php if($leave['status'] == 'pending'): ?>
+                            <a href="approve_leave.php?id=<?= $leave['id']; ?>" class="btn btn-success btn-sm">Approve</a>
+                            <a href="reject_leave.php?id=<?= $leave['id']; ?>" class="btn btn-danger btn-sm">Reject</a>
+                        <?php else: ?>
+                            Done
+                        <?php endif; ?>
+                    </td>
 
-    <td>
+                </tr>
 
-        <?php if($leave['status'] == 'pending'): ?>
+            <?php endforeach; ?>
 
-            <a href="approve_leave.php?id=<?php echo $leave['id']; ?>"
-               class="btn btn-success btn-sm">
-               Approve
-            </a>
+            </tbody>
+        </table>
 
-            <a href="reject_leave.php?id=<?php echo $leave['id']; ?>"
-               class="btn btn-danger btn-sm">
-               Reject
-            </a>
-
-        <?php else: ?>
-
-            Done
-
-        <?php endif; ?>
-
-    </td>
-
-</tr>
-
-<?php endforeach; ?>
-
-</tbody>
     </div>
-    
 
-    </table>
-
- </main>
-
-
-
-
-
+</main>
 
 </body>
 </html>

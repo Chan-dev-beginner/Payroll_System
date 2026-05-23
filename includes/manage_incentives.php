@@ -66,11 +66,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_incentive'])) {
     exit();
 }
 
+/* ASSIGN INCENTIVE TO EMPLOYEE */
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['assign_incentive'])) {
+
+        $stmt = $pdo->prepare("
+            INSERT INTO employee_incentives (employee_id, incentive_type_id, amount, remarks)
+            VALUES (?, ?, ?, ?)
+        ");
+
+        $stmt->execute([
+            $_POST['employee_id'],
+            $_POST['incentive_type_id'],
+            $_POST['amount'],
+            $_POST['remarks']
+        ]);
+
+        header("Location: manage_incentives.php");
+        exit();
+    }
+
 /* DATA */
 $incentives = $pdo->query("
     SELECT id, incentive_name, description, amount, created_at
     FROM incentive_types
     ORDER BY created_at DESC
+")->fetchAll(PDO::FETCH_ASSOC);
+
+$employees = $pdo->query("
+    SELECT id, firstname, lastname
+    FROM employees
 ")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
@@ -225,6 +249,56 @@ $incentives = $pdo->query("
                 <?php endif; ?>
 
             </form>
+
+            <div class="card">
+
+    <div class="card-header">
+        <h3 class="card-title">Assign Incentive to Employee</h3>
+    </div>
+
+    <form method="POST">
+
+        <div class="form-group">
+            <label>Employee</label>
+            <select name="employee_id" required>
+                <option value="">Select Employee</option>
+                <?php foreach ($employees as $e): ?>
+                    <option value="<?= $e['id'] ?>">
+                        <?= htmlspecialchars($e['firstname'] . ' ' . $e['lastname']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Incentive Type</label>
+            <select name="incentive_type_id" required>
+                <option value="">Select Incentive</option>
+                <?php foreach ($incentives as $i): ?>
+                    <option value="<?= $i['id'] ?>">
+                        <?= htmlspecialchars($i['incentive_name']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Amount</label>
+            <input type="number" step="0.01" name="amount" required>
+        </div>
+
+        <div class="form-group">
+            <label>Remarks</label>
+            <textarea name="remarks"></textarea>
+        </div>
+
+        <button type="submit" name="assign_incentive" class="btn btn-primary btn-block">
+            ➕ Assign Incentive
+        </button>
+
+    </form>
+
+</div>
 
         </div>
 

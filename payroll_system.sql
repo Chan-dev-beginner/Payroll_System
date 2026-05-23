@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 23, 2026 at 01:18 PM
+-- Generation Time: May 23, 2026 at 02:07 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -53,7 +53,12 @@ INSERT INTO `attendance` (`id`, `employee_id`, `date`, `time_in`, `time_out`, `h
 (10, 2, '2026-05-22', '19:48:36', '19:49:03', 0.00, 'present', '2026-05-22 11:48:36'),
 (11, 1, '2026-05-23', '18:07:23', '18:55:39', 0.00, 'present', '2026-05-23 10:07:23'),
 (12, 5, '2026-05-23', '18:09:19', NULL, 0.00, 'present', '2026-05-23 10:09:19'),
-(13, 6, '2026-05-23', '18:10:29', '18:58:03', 0.00, 'present', '2026-05-23 10:10:29');
+(13, 6, '2026-05-23', '18:10:29', '18:58:03', 0.00, 'present', '2026-05-23 10:10:29'),
+(14, 1, '2026-05-15', '08:00:00', '17:00:00', 8.00, 'present', '2026-05-23 11:26:15'),
+(17, 1, '2026-05-16', '08:00:00', '17:00:00', 8.00, 'present', '2026-05-23 11:28:03'),
+(18, 6, '2026-05-17', '08:00:00', '17:00:00', 8.00, 'present', '2026-05-23 11:28:18'),
+(19, 6, '2026-05-16', '08:00:00', '17:00:00', 8.00, 'present', '2026-05-23 11:28:27'),
+(20, 2, '2026-05-27', '08:00:00', '17:00:00', 8.00, 'present', '2026-05-23 11:45:13');
 
 -- --------------------------------------------------------
 
@@ -115,6 +120,28 @@ INSERT INTO `employees` (`id`, `employee_id`, `firstname`, `lastname`, `email`, 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `employee_incentives`
+--
+
+CREATE TABLE `employee_incentives` (
+  `id` int(11) NOT NULL,
+  `employee_id` int(11) NOT NULL,
+  `incentive_type_id` int(11) NOT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `remarks` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `employee_incentives`
+--
+
+INSERT INTO `employee_incentives` (`id`, `employee_id`, `incentive_type_id`, `amount`, `remarks`, `created_at`) VALUES
+(1, 2, 1, 1200.00, 'good job', '2026-05-23 12:04:28');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `incentive_types`
 --
 
@@ -167,7 +194,9 @@ INSERT INTO `leave_requests` (`id`, `employee_id`, `employee_name`, `leave_type_
 (1, 1, NULL, 2, '2026-05-22', '2026-06-22', 32, 'sakit leeg ko', 'pending', NULL, NULL, '2026-05-22 11:19:30'),
 (2, 1, NULL, 1, '2026-05-23', '2026-06-23', 32, 'asdf', 'pending', NULL, NULL, '2026-05-23 10:47:36'),
 (3, 1, NULL, 5, '2026-05-30', '2026-05-30', 1, 'nabuntis aso namen', 'approved', NULL, NULL, '2026-05-23 10:47:52'),
-(4, 1, NULL, 4, '2026-05-23', '2026-06-23', 32, 'zxcv', 'approved', NULL, NULL, '2026-05-23 10:48:53');
+(4, 1, NULL, 4, '2026-05-23', '2026-06-23', 32, 'zxcv', 'approved', NULL, NULL, '2026-05-23 10:48:53'),
+(5, 6, NULL, 5, '2026-05-23', '2026-06-23', 32, 'buntis pusa', 'pending', NULL, NULL, '2026-05-23 11:22:32'),
+(6, 2, NULL, 2, '2026-05-23', '2026-05-27', 5, 'tigdas', 'approved', NULL, NULL, '2026-05-23 11:42:22');
 
 -- --------------------------------------------------------
 
@@ -225,8 +254,8 @@ CREATE TABLE `payroll` (
 
 INSERT INTO `payroll` (`id`, `employee_id`, `month_year`, `basic_salary`, `total_incentives`, `total_deductions`, `days_worked`, `days_absent`, `paid_leaves`, `unpaid_leaves`, `total_hours`, `overtime_hours`, `gross_pay`, `net_pay`, `status`, `created_at`) VALUES
 (2, 5, '2026-05-01', 2272.73, 0.00, 340.91, 1, 0, 0, 0, 0.00, 0.00, 2272.73, 1931.82, 'finalized', '2026-05-20 06:50:14'),
-(4, 2, '2026-05-01', 1136.36, 0.00, 170.45, 1, 0, 0, 0, 0.04, 0.00, 1136.36, 965.91, 'draft', '2026-05-20 07:11:32'),
-(5, 6, '2026-05-01', 1636.36, 0.00, 245.45, 3, 0, 0, 0, 0.00, 0.00, 1636.36, 1390.91, 'finalized', '2026-05-20 08:27:21'),
+(4, 2, '2026-05-01', 9090.91, 0.00, 1363.64, 3, 0, 5, 0, 8.04, 0.00, 9090.91, 7727.27, 'draft', '2026-05-20 07:11:32'),
+(5, 6, '2026-05-01', 2727.27, 0.00, 409.09, 5, 0, 0, 0, 16.00, 0.00, 2727.27, 2318.18, 'draft', '2026-05-20 08:27:21'),
 (9, 1, '2026-05-01', 4545.45, 1470.00, 902.32, 2, 0, 0, 0, 0.00, 0.00, 6015.45, 5113.14, 'draft', '2026-05-22 11:34:53');
 
 -- --------------------------------------------------------
@@ -306,6 +335,12 @@ ALTER TABLE `employees`
   ADD KEY `shift_id` (`shift_id`);
 
 --
+-- Indexes for table `employee_incentives`
+--
+ALTER TABLE `employee_incentives`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `incentive_types`
 --
 ALTER TABLE `incentive_types`
@@ -353,7 +388,7 @@ ALTER TABLE `shifts`
 -- AUTO_INCREMENT for table `attendance`
 --
 ALTER TABLE `attendance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `departments`
@@ -368,6 +403,12 @@ ALTER TABLE `employees`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT for table `employee_incentives`
+--
+ALTER TABLE `employee_incentives`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `incentive_types`
 --
 ALTER TABLE `incentive_types`
@@ -377,7 +418,7 @@ ALTER TABLE `incentive_types`
 -- AUTO_INCREMENT for table `leave_requests`
 --
 ALTER TABLE `leave_requests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `leave_types`
@@ -389,7 +430,7 @@ ALTER TABLE `leave_types`
 -- AUTO_INCREMENT for table `payroll`
 --
 ALTER TABLE `payroll`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `roles`
