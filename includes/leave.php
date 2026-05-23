@@ -43,6 +43,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 }
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -50,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attendance System</title>
+    <title>My Request Leave</title>
 
     <link rel="stylesheet" href="../assets/dashboard.css">
 
@@ -101,13 +104,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </li>
 
         <li class="nav-item">
-            <a href="../includes/attendanceEmployee.php" class="nav-link active">
+            <a href="../includes/attendanceEmployee.php" class="nav-link">
                 <i>⏰</i> My Attendance
             </a>
         </li>
 
         <li class="nav-item">
-            <a href="leave.php" class="nav-link">
+            <a href="leave.php" class="nav-link active">
                 <i>🏖️</i> My Request Leave
             </a>
         </li>
@@ -165,8 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <form method="POST">
 
-        <label>Name</label>
-        <input name="name" required>
+        <strong><?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']); ?></strong> <hr>
 
         <label>Leave Type</label>
         <select name="leave_type_id" required>
@@ -189,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <button type="submit">Submit Leave Request</button>
 
-    </form>
+        </form>
 
     </div>
 </main>
@@ -197,4 +199,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 </body>
 </html>
-
