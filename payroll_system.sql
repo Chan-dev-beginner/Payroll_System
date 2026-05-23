@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 20, 2026 at 11:21 AM
+-- Generation Time: May 23, 2026 at 01:18 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -46,7 +46,14 @@ INSERT INTO `attendance` (`id`, `employee_id`, `date`, `time_in`, `time_out`, `h
 (1, 1, '2026-05-20', '07:42:37', '07:42:50', 0.00, 'present', '2026-05-20 05:42:37'),
 (2, 5, '2026-05-20', '08:28:48', '08:28:55', 0.00, 'present', '2026-05-20 06:28:48'),
 (3, 2, '2026-05-20', '08:29:31', '08:31:38', 0.04, 'present', '2026-05-20 06:29:31'),
-(6, 6, '2026-05-20', '16:04:02', '16:40:22', 0.00, 'present', '2026-05-20 08:04:02');
+(6, 6, '2026-05-20', '16:04:02', '16:40:22', 0.00, 'present', '2026-05-20 08:04:02'),
+(7, 6, '2026-05-22', '19:13:59', '19:16:08', 0.00, 'present', '2026-05-22 11:13:59'),
+(8, 1, '2026-05-22', '19:15:52', '19:34:38', 0.00, 'present', '2026-05-22 11:15:52'),
+(9, 5, '2026-05-22', '19:22:44', NULL, 0.00, 'present', '2026-05-22 11:22:44'),
+(10, 2, '2026-05-22', '19:48:36', '19:49:03', 0.00, 'present', '2026-05-22 11:48:36'),
+(11, 1, '2026-05-23', '18:07:23', '18:55:39', 0.00, 'present', '2026-05-23 10:07:23'),
+(12, 5, '2026-05-23', '18:09:19', NULL, 0.00, 'present', '2026-05-23 10:09:19'),
+(13, 6, '2026-05-23', '18:10:29', '18:58:03', 0.00, 'present', '2026-05-23 10:10:29');
 
 -- --------------------------------------------------------
 
@@ -140,6 +147,7 @@ INSERT INTO `incentive_types` (`id`, `incentive_name`, `description`, `created_a
 CREATE TABLE `leave_requests` (
   `id` int(11) NOT NULL,
   `employee_id` int(11) NOT NULL,
+  `employee_name` varchar(100) DEFAULT NULL,
   `leave_type_id` int(11) NOT NULL,
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
@@ -150,6 +158,16 @@ CREATE TABLE `leave_requests` (
   `approval_date` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `leave_requests`
+--
+
+INSERT INTO `leave_requests` (`id`, `employee_id`, `employee_name`, `leave_type_id`, `start_date`, `end_date`, `total_days`, `reason`, `status`, `approved_by`, `approval_date`, `created_at`) VALUES
+(1, 1, NULL, 2, '2026-05-22', '2026-06-22', 32, 'sakit leeg ko', 'pending', NULL, NULL, '2026-05-22 11:19:30'),
+(2, 1, NULL, 1, '2026-05-23', '2026-06-23', 32, 'asdf', 'pending', NULL, NULL, '2026-05-23 10:47:36'),
+(3, 1, NULL, 5, '2026-05-30', '2026-05-30', 1, 'nabuntis aso namen', 'approved', NULL, NULL, '2026-05-23 10:47:52'),
+(4, 1, NULL, 4, '2026-05-23', '2026-06-23', 32, 'zxcv', 'approved', NULL, NULL, '2026-05-23 10:48:53');
 
 -- --------------------------------------------------------
 
@@ -207,9 +225,9 @@ CREATE TABLE `payroll` (
 
 INSERT INTO `payroll` (`id`, `employee_id`, `month_year`, `basic_salary`, `total_incentives`, `total_deductions`, `days_worked`, `days_absent`, `paid_leaves`, `unpaid_leaves`, `total_hours`, `overtime_hours`, `gross_pay`, `net_pay`, `status`, `created_at`) VALUES
 (2, 5, '2026-05-01', 2272.73, 0.00, 340.91, 1, 0, 0, 0, 0.00, 0.00, 2272.73, 1931.82, 'finalized', '2026-05-20 06:50:14'),
-(3, 1, '2026-05-01', 2272.73, 1470.00, 561.41, 1, 0, 0, 0, 0.00, 0.00, 3742.73, 3181.32, 'draft', '2026-05-20 07:11:26'),
 (4, 2, '2026-05-01', 1136.36, 0.00, 170.45, 1, 0, 0, 0, 0.04, 0.00, 1136.36, 965.91, 'draft', '2026-05-20 07:11:32'),
-(5, 6, '2026-05-01', 545.45, 0.00, 81.82, 1, 0, 0, 0, 0.00, 0.00, 545.45, 463.64, 'draft', '2026-05-20 08:27:21');
+(5, 6, '2026-05-01', 1636.36, 0.00, 245.45, 3, 0, 0, 0, 0.00, 0.00, 1636.36, 1390.91, 'finalized', '2026-05-20 08:27:21'),
+(9, 1, '2026-05-01', 4545.45, 1470.00, 902.32, 2, 0, 0, 0, 0.00, 0.00, 6015.45, 5113.14, 'draft', '2026-05-22 11:34:53');
 
 -- --------------------------------------------------------
 
@@ -335,7 +353,7 @@ ALTER TABLE `shifts`
 -- AUTO_INCREMENT for table `attendance`
 --
 ALTER TABLE `attendance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `departments`
@@ -358,8 +376,8 @@ ALTER TABLE `incentive_types`
 --
 -- AUTO_INCREMENT for table `leave_requests`
 --
-ALTER TABLE leave_requests
-  ADD employee_name VARCHAR(100) AFTER employee_id;
+ALTER TABLE `leave_requests`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `leave_types`
@@ -371,7 +389,7 @@ ALTER TABLE `leave_types`
 -- AUTO_INCREMENT for table `payroll`
 --
 ALTER TABLE `payroll`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `roles`
