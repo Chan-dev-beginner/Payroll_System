@@ -116,7 +116,7 @@ $leave_requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <div class="user-info">
 
-        <strong> <?php echo htmlspecialchars($user['firstname']); ?> </strong>
+        <strong> <?php echo htmlspecialchars($user['name']); ?> </strong>
         <small> <?php echo htmlspecialchars($user['email']); ?> </small>
 
         <?php if ($user['is_admin']): ?>

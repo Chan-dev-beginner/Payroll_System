@@ -260,7 +260,8 @@ $total_shifts = $stmt->fetchColumn();
 
     <div class="user-info">
 
-        <strong> <?php echo htmlspecialchars($user['firstname']); ?> </strong>
+        <str
+        ong> <?php echo htmlspecialchars($user['name']); ?> </strong>
         <small> <?php echo htmlspecialchars($user['email']); ?> </small>
 
         <?php if ($user['is_admin']): ?>
