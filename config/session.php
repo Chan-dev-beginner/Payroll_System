@@ -40,17 +40,31 @@ function requireHR() {
 // GET CURRENT USER INFO
 // ============================================================
 function getCurrentUser() {
+
+    global $pdo;
+
     if (!isLoggedIn()) {
         return null;
     }
-    
-    return [
-        'id' => $_SESSION['user_id'],
-        'name' => $_SESSION['user_name'],
-        'email' => $_SESSION['user_email'],
-        'is_hr' => $_SESSION['is_hr'],
-        'is_admin' => $_SESSION['is_admin']
-    ];
+
+    $stmt = $pdo->prepare("
+        SELECT
+            e.*,
+            r.role_name,
+            r.monthly_salary,
+            d.department_name,
+            s.shift_name
+        FROM employees e
+        JOIN roles r ON e.role_id = r.id
+        LEFT JOIN departments d ON e.department_id = d.id
+        LEFT JOIN shifts s ON e.shift_id = s.id
+        WHERE e.id = ?
+        LIMIT 1
+    ");
+
+    $stmt->execute([$_SESSION['user_id']]);
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
 // ============================================================
