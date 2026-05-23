@@ -277,7 +277,7 @@ $attendance_history = $stmt->fetchAll();
 
     <div class="user-info">
 
-        <strong><?= htmlspecialchars($user['name']); ?></strong>
+        <strong><?= htmlspecialchars($user['firstname']); ?></strong>
         <small><?= htmlspecialchars($user['email']); ?></small>
 
         <?php if ($user['is_admin']): ?>

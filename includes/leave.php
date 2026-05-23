@@ -9,43 +9,73 @@ $user = getCurrentUser();
 $error = "";
 $success = "";
 
-
-$conn = mysqli_connect("localhost", "root", "", "payroll_system");
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $employee_id   = $user['id'];
-    $employee_name = $user['name'];
     $leave_type_id = intval($_POST['leave_type_id']);
     $start_date    = $_POST['start_date'];
     $end_date      = $_POST['end_date'];
-    $reason        = mysqli_real_escape_string($conn, $_POST['reason']);
+    $reason        = trim($_POST['reason']);
 
-    // calculate total days
+    // CALCULATE TOTAL DAYS
     $start = new DateTime($start_date);
     $end   = new DateTime($end_date);
+
     $interval = $start->diff($end);
     $total_days = $interval->days + 1;
 
-    if (empty($leave_type_id) || empty($start_date) || empty($end_date)) {
+    // VALIDATION
+    if (
+        empty($leave_type_id) ||
+        empty($start_date) ||
+        empty($end_date) ||
+        empty($reason)
+    ) {
+
         $error = "Please fill all required fields.";
+
+    } elseif ($end_date < $start_date) {
+
+        $error = "End date cannot be earlier than start date.";
+
     } else {
 
-        $sql = "INSERT INTO leave_requests 
-                (employee_id, leave_type_id, start_date, end_date, total_days, reason, status)
-                VALUES
-                ('$employee_id', '$leave_type_id', '$start_date', '$end_date', '$total_days', '$reason', 'pending')";
+        // INSERT LEAVE REQUEST USING PDO
+        $stmt = $pdo->prepare("
+            INSERT INTO leave_requests
+            (
+                employee_id,
+                leave_type_id,
+                start_date,
+                end_date,
+                total_days,
+                reason,
+                status
+            )
+            VALUES
+            (?, ?, ?, ?, ?, ?, 'pending')
+        ");
 
-        if (mysqli_query($conn, $sql)) {
+        $result = $stmt->execute([
+            $employee_id,
+            $leave_type_id,
+            $start_date,
+            $end_date,
+            $total_days,
+            $reason
+        ]);
+
+        if ($result) {
+
             $success = "Leave request submitted successfully!";
+
         } else {
-            $error = "Database error: " . mysqli_error($conn);
+
+            $error = "Database error.";
+
         }
     }
 }
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -165,6 +195,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 
     <div class="card attendance-card">
+        
+        <?php if($error): ?>
+            <p class="error"><?php echo $error; ?></p>
+        <?php endif; ?>
+
+        <?php if($success): ?>
+            <p class="success"><?php echo $success; ?></p>
+        <?php endif; ?>
 
         <form method="POST">
 

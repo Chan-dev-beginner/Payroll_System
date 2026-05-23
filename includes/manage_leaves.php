@@ -14,13 +14,49 @@ $user = getCurrentUser();
 $message = '';
 $error = '';
 
-//FETCH LEAVE REQUEST
-$stmt = $pdo->query("
-    SELECT * FROM leave_requests
-");
+// ============================================================
+// FILTER MONTH
+// ============================================================
+
+$selected_month = isset($_GET['month']) ? $_GET['month'] : 'all';
+
+// ============================================================
+// FETCH LEAVE REQUESTS
+// ============================================================
+
+if ($selected_month == 'all') {
+
+    $stmt = $pdo->query("
+        SELECT 
+            lr.*,
+            e.firstname,
+            e.lastname,
+            lt.leave_name
+        FROM leave_requests lr
+        JOIN employees e ON lr.employee_id = e.id
+        JOIN leave_types lt ON lr.leave_type_id = lt.id
+        ORDER BY lr.start_date DESC
+    ");
+
+} else {
+
+    $stmt = $pdo->prepare("
+        SELECT 
+            lr.*,
+            e.firstname,
+            e.lastname,
+            lt.leave_name
+        FROM leave_requests lr
+        JOIN employees e ON lr.employee_id = e.id
+        JOIN leave_types lt ON lr.leave_type_id = lt.id
+        WHERE MONTH(lr.start_date) = ?
+        ORDER BY lr.start_date DESC
+    ");
+
+    $stmt->execute([$selected_month]);
+}
 
 $leave_requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 ?>
 
 <!DOCTYPE html>
@@ -116,7 +152,9 @@ $leave_requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <div class="user-info">
 
-        <strong> <?php echo htmlspecialchars($user['name']); ?> </strong>
+    <strong>
+        <?php echo htmlspecialchars($user['firstname'] . ' ' . $user['lastname']); ?>
+    </strong>
         <small> <?php echo htmlspecialchars($user['email']); ?> </small>
 
         <?php if ($user['is_admin']): ?>
@@ -150,6 +188,75 @@ $leave_requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         <?php endif; ?>
 
+        <!-- MONTH FILTER -->
+        <form method="GET" style="margin-bottom:20px;">
+
+            <label><strong>Filter By Month:</strong></label>
+
+            <select name="month">
+
+                <option value="all"
+                    <?= ($selected_month == 'all') ? 'selected' : ''; ?>>
+                    Show All Leaves
+                </option>
+
+                <option value="1" <?= ($selected_month == '1') ? 'selected' : ''; ?>>
+                    January
+                </option>
+
+                <option value="2" <?= ($selected_month == '2') ? 'selected' : ''; ?>>
+                    February
+                </option>
+
+                <option value="3" <?= ($selected_month == '3') ? 'selected' : ''; ?>>
+                    March
+                </option>
+
+                <option value="4" <?= ($selected_month == '4') ? 'selected' : ''; ?>>
+                    April
+                </option>
+
+                <option value="5" <?= ($selected_month == '5') ? 'selected' : ''; ?>>
+                    May
+                </option>
+
+                <option value="6" <?= ($selected_month == '6') ? 'selected' : ''; ?>>
+                    June
+                </option>
+
+                <option value="7" <?= ($selected_month == '7') ? 'selected' : ''; ?>>
+                    July
+                </option>
+
+                <option value="8" <?= ($selected_month == '8') ? 'selected' : ''; ?>>
+                    August
+                </option>
+
+                <option value="9" <?= ($selected_month == '9') ? 'selected' : ''; ?>>
+                    September
+                </option>
+
+                <option value="10" <?= ($selected_month == '10') ? 'selected' : ''; ?>>
+                    October
+                </option>
+
+                <option value="11" <?= ($selected_month == '11') ? 'selected' : ''; ?>>
+                    November
+                </option>
+
+                <option value="12" <?= ($selected_month == '12') ? 'selected' : ''; ?>>
+                    December
+                </option>
+
+            </select>
+
+            <button type="submit" class="btn btn-primary">
+                Filter
+            </button>
+
+        </form>
+
+
         <table>
         <thead>
             <tr>
@@ -172,9 +279,9 @@ $leave_requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <td><?php echo $leave['id']; ?></td>
 
-    <td><?php echo $leave['employee_id']; ?></td>
+    <td><?php echo htmlspecialchars($leave['firstname'] . ' ' . $leave['lastname']); ?> </td>
 
-    <td><?php echo $leave['leave_type_id']; ?></td>
+    <td><?php echo htmlspecialchars($leave['leave_name']); ?></td>
 
     <td><?php echo $leave['start_date']; ?></td>
 
