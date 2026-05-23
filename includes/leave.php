@@ -142,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </ul>
 
     <div class="user-info">
-        <strong><?= htmlspecialchars($user['name']); ?></strong>
+        <strong><?= htmlspecialchars($user['firstname']. ' ' . $user['lastname']); ?></strong>
         <small><?= htmlspecialchars($user['email']); ?></small>
 
         <?php if ($user['is_admin']): ?>
