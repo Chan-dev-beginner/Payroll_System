@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <div class="logo">
             <h1>💼 Payroll System</h1>
-            <p>Human Resource Management</p>
+            <p>CVSU-IMUS Campus</p>
         </div>
 
         <h2>Welcome Back</h2>
