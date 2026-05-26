@@ -14,6 +14,19 @@ $message = '';
 $error = '';
 
 // ============================================================
+// DELETE EMPLOYEE
+// ============================================================
+if (isset($_GET['delete'])) {
+    try {
+        $stmt = $pdo->prepare("DELETE FROM employees WHERE id = ?");
+        $stmt->execute([$_GET['delete']]);
+        $message = "Employee deleted successfully!";
+    } catch(PDOException $e) {
+        $error = "Cannot delete employee: " . $e->getMessage();
+    }
+}
+
+// ============================================================
 // ADD EMPLOYEE
 // ============================================================
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -347,12 +360,20 @@ $total_shifts = $stmt->fetchColumn();
 
                     <td>
                         <div class="action-buttons">
-                        <button type="button" class="btn btn-primary btn-sm" onclick='editEmployee(<?php echo json_encode($emp); ?>)'>Edit</button>
+                            <button type="button" class="btn btn-primary btn-sm"
+                                    onclick='editEmployee(<?php echo json_encode($emp); ?>)'>
+                                Edit
+                            </button>
+                            <a href="?delete=<?php echo $emp['id']; ?>"
+                               class="btn btn-danger btn-sm"
+                               onclick="return confirm('Delete <?php echo htmlspecialchars($emp['firstname'] . ' ' . $emp['lastname']); ?>? This cannot be undone.')">
+                                Delete
+                            </a>
                         </div>
                     </td>
                 </tr>
 
-                    <?php endforeach; ?>
+                <?php endforeach; ?>
 
             </tbody>
             </table>
@@ -360,19 +381,6 @@ $total_shifts = $stmt->fetchColumn();
     </div>
 </main>
 
-<script>
-
-// OPEN MODAL
-function openModal(id){
-    document.getElementById(id).classList.add('show');
-}
-
-// CLOSE MODAL
-function closeModal(id){
-    document.getElementById(id).classList.remove('show');
-}
-
-</script>
 <!-- ADD EMPLOYEE MODAL -->
 <div id="addModal" class="modal">
     <div class="modal-content">
