@@ -75,9 +75,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['generate_payroll'])) {
         // 3. GET INCENTIVES FOR THIS EMPLOYEE
         $stmt = $pdo->prepare("
             SELECT COALESCE(SUM(amount), 0) as total_incentives 
-            FROM incentive_types 
+            FROM employee_incentives
             WHERE employee_id = ?
-            AND DATE_FORMAT(date_given, '%Y-%m') = DATE_FORMAT(?, '%Y-%m')
+            AND DATE_FORMAT(created_at, '%Y-%m') = DATE_FORMAT(?, '%Y-%m')
         ");
         $stmt->execute([$employee_id, $month_year]);
         $incentives = $stmt->fetch();
