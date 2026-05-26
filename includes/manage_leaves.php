@@ -151,7 +151,7 @@ $leave_requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="user-info">
 
         <strong>
-            <?php echo htmlspecialchars($user['firstname'] . ' ' . $user['lastname']); ?>
+            <?php echo htmlspecialchars($user['firstname']); ?>
         </strong>
 
         <small><?php echo htmlspecialchars($user['email']); ?></small>
