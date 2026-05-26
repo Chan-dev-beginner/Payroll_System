@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="login-box">
         <div class="logo">
             <h1>💼 Payroll System</h1>
-            <p>CVSU-IMUS Campus</p>
+            <p>Company ni Chan</p>
         </div>
         <h2>Welcome Back</h2>
         <p class="subtitle">Sign in to your account</p>
