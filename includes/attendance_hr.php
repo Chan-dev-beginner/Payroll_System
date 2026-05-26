@@ -140,7 +140,7 @@ $attendance_records = $stmt->fetchAll();
     </ul>
 
     <div class="user-info">
-        <strong><?= htmlspecialchars($user['firstname']); ?></strong>
+        <strong><?= htmlspecialchars($user['firstname'] . ' ' . $user['lastname']); ?></strong>
         <small><?= htmlspecialchars($user['email']); ?></small>
 
         <?php if ($user['is_admin']): ?>
