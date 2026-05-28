@@ -46,60 +46,7 @@ $attendance = $stmt->fetch(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <title>My Payslip</title>
-    <link rel="stylesheet" href="../assets/dashboard.css">
-
-    <style>
-        /* PRINT BUTTON STYLE */
-.print-btn {
-    background: #2d6cdf;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    border-radius: 6px;
-    margin-bottom: 15px;
-    
-}
-
-
-@media print {
-
-    body {
-        background: white !important;
-        
-    }
-
-   
-    .sidebar,
-    .topbar,
-    .print-btn {
-        display: none !important;
-    }
-
-    
-    .main-content {
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    .card {
-        box-shadow: none !important;
-        border: none !important;
-        width: 100% !important;
-
-    }
-
-    @page {
-        size: A4;
-        margin: 20mm;
-    }
-
-    
-    p, h2, h3 {
-        color: black !important;
-    }
-}
-    </style>
+    <link rel="stylesheet" href="../assets/payslip.css">
 </head>
 <body class="dashboard">
 
