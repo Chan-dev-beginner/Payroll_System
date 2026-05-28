@@ -46,6 +46,7 @@ $attendance = $stmt->fetch(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <title>My Payslip</title>
+    <link rel="stylesheet" href="../assets/dashboard.css">
     <link rel="stylesheet" href="../assets/payslip.css">
 </head>
 <body class="dashboard">
