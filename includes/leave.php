@@ -84,33 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Request Leave</title>
-
-    <link rel="stylesheet" href="../assets/dashboard.css">
-
-    <style>
-        .present-cell { color: green; font-weight: bold; }
-        .late-cell { color: orange; font-weight: bold; }
-        .absent-cell { color: red; font-weight: bold; }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 8px;
-            border: 1px solid #ddd;
-            text-align: center;
-}
-        
-        form { max-width: 500px; }
-        label { display: block; margin-top: 10px; }
-        input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; }
-        button { margin-top: 15px; padding: 10px 20px; }
-        .error { color: red; }
-        .success { color: green; }
-        
-    </style>
+    <link rel="stylesheet" href="../assets/leave.css">
 </head>
 
 <body class="dashboard">
