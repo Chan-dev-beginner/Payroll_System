@@ -107,7 +107,7 @@ $attendance = $stmt->fetch(PDO::FETCH_ASSOC);
             </a>
         </li>
         <li class="nav-item">
-            <a href="payroll.php" class="nav-link active">
+            <a href="payroll.php" class="nav-link">
                 <i>📊</i> Payroll
             </a>
         </li>
