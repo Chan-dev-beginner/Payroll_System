@@ -84,6 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Request Leave</title>
+    <link rel="stylesheet" href="../assets/dashboard.css">
     <link rel="stylesheet" href="../assets/leave.css">
 </head>
 
