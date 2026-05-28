@@ -117,7 +117,7 @@ $employees = $pdo->query("
 
     <ul class="nav-menu">
         <li class="nav-item">
-            <a href="dashboard.php" class="nav-link active">
+            <a href="dashboard.php" class="nav-link">
                 <i>🏠</i> Dashboard
             </a>
         </li>
@@ -159,7 +159,7 @@ $employees = $pdo->query("
             </a>
         </li>
         <li class="nav-item">
-            <a href="manage_incentives.php" class="nav-link">
+            <a href="manage_incentives.php" class="nav-link active">
                 <i>🎁</i> Incentives
             </a>
         </li>
