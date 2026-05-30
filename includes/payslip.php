@@ -179,9 +179,16 @@ $attendance = $stmt->fetch(PDO::FETCH_ASSOC);
     <br><br>
 <?php endif; ?>
 
-<button onclick="window.print()" class="print-btn">
-    🖨️ Print Payslip
-</button>
+<div class="button-row">
+    <?php if ($payroll): ?>
+        <a href="export_payslip_xml.php" class="btn btn-secondary">
+            📄 Export Payslip XML
+        </a>
+    <?php endif; ?>
+    <button onclick="window.print()" class="print-btn">
+        🖨️ Print Payslip
+    </button>
+</div>
 
 
 </div>

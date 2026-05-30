@@ -314,10 +314,15 @@ $total_shifts = $stmt->fetchColumn();
 
             <h3 class="card-title">All Employees</h3>
 
-            <button class="btn btn-primary"
-                    onclick="openModal('addModal')">
-                + Add Employee
-            </button>
+            <div class="button-group">
+                <button class="btn btn-primary"
+                        onclick="openModal('addModal')">
+                    + Add Employee
+                </button>
+                <a href="export_employees_xml.php" class="btn btn-secondary">
+                    📄 Export XML
+                </a>
+            </div>
 
         </div>
 
