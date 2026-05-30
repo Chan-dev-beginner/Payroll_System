@@ -134,7 +134,7 @@ $attendance = $stmt->fetch(PDO::FETCH_ASSOC);
 <main class="main-content">
 
 <div class="topbar">
-    <h2>💰 My Payslip</h2>
+    <h2>My Payslip</h2>
     <div><?= date('F d, Y'); ?></div>
 </div>
 
@@ -179,10 +179,19 @@ $attendance = $stmt->fetch(PDO::FETCH_ASSOC);
     <br><br>
 <?php endif; ?>
 
-<button onclick="window.print()" class="print-btn">
-    🖨️ Print Payslip
-</button>
+<div class="button-row">
 
+    <?php if ($payroll): ?>
+        <a href="export_payslip_xml.php" class="btn btn-export">
+            📄 Export XML
+        </a>
+    <?php endif; ?>
+
+    <button onclick="window.print()" class="btn btn-print">
+        🖨️ Print Payslip
+    </button>
+
+</div>
 
 </div>
 

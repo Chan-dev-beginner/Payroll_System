@@ -5,36 +5,30 @@
     padding: 10px 15px;
     cursor: pointer;
     border-radius: 6px;
-    margin-bottom: 15px;
-    
+    margin-bottom: 15px;   
 }
-
 
 @media print {
 
     body {
-        background: white !important;
-        
+        background: white;
     }
 
-   
     .sidebar,
     .topbar,
     .print-btn {
-        display: none !important;
+        display: none;
     }
 
-    
     .main-content {
-        margin: 0 !important;
-        padding: 0 !important;
+        margin: 0;
+        padding: 0;
     }
 
     .card {
-        box-shadow: none !important;
-        border: none !important;
-        width: 100% !important;
-
+        box-shadow: none;
+        border: none;
+        width: 100%;
     }
 
     @page {
@@ -42,9 +36,7 @@
         margin: 20mm;
     }
 
-    
     p, h2, h3 {
-        color: black !important;
+        color: black;
     }
 }
-    
