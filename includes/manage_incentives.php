@@ -105,326 +105,308 @@ $employees = $pdo->query("
     <title>Manage Incentives</title>
     <link rel="stylesheet" href="../assets/dashboard.css">
     <style>
-        /* Additional inline styles */
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            flex-wrap: nowrap;
-        }
-        
-        .action-buttons .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            white-space: nowrap;
-            margin: 0;
-            padding: 6px 12px;
-            font-size: 13px;
-            line-height: 1.5;
-        }
-        
-        .btn-sm {
-            padding: 5px 10px;
-            font-size: 12px;
-        }
-        
-        .btn-warning {
-            background-color: #ffc107;
-            color: #212529;
-            text-decoration: none;
-            border-radius: 4px;
-        }
-        
-        .btn-danger {
-            background-color: #dc3545;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-        }
-        
-        .btn-warning:hover {
-            background-color: #e0a800;
-        }
-        
-        .btn-danger:hover {
-            background-color: #c82333;
-        }
-        
-        .btn-success {
-            background-color: #28a745;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            padding: 8px 16px;
-            border: none;
-            cursor: pointer;
-        }
-        
-        .btn-success:hover {
-            background-color: #218838;
-        }
-        
-        .table-container table td .action-buttons {
-            display: flex;
-            gap: 8px;
-            justify-content: flex-start;
-        }
-        
-        /* Make incentive records dominant */
-        .dominant-table {
-            width: 100%;
-            margin-top: 0;
-        }
-        
-        .dominant-table .table-container {
-            overflow-x: auto;
-            max-height: 70vh;
-        }
-        
-        .dominant-table table {
-            width: 100%;
-            min-width: 800px;
-        }
-        
-        .dominant-table th, .dominant-table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        .dominant-table th {
-            background-color: #2c3e50;
-            color: white;
-            position: sticky;
-            top: 0;
-        }
-        
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
-        }
-        
-        .modal-content {
-            background-color: #fff;
-            margin: 5% auto;
-            padding: 0;
-            width: 500px;
-            max-width: 90%;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            animation: modalSlideIn 0.3s ease;
-        }
-        
-        @keyframes modalSlideIn {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        
-        .modal-header {
-            padding: 20px 25px;
-            background-color: #2c3e50;
-            color: white;
-            border-radius: 12px 12px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .modal-header h3 {
-            margin: 0;
-            font-size: 1.4rem;
-        }
-        
-        .close-modal {
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        
-        .close-modal:hover {
-            color: #ffc107;
-        }
-        
-        .modal-body {
-            padding: 25px;
-        }
-        
-        .modal-footer {
-            padding: 15px 25px;
-            background-color: #f8f9fa;
-            border-radius: 0 0 12px 12px;
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-        }
-        
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            box-sizing: border-box;
-        }
-        
-        .form-group textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-        
-        .btn-primary {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        
-        .btn-primary:hover {
-            background-color: #2980b9;
-        }
-        
-        .btn-secondary {
-            background-color: #95a5a6;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-        
-        .btn-secondary:hover {
-            background-color: #7f8c8d;
-        }
-        
-        .action-header {
-            display: flex;
-            justify-content: flex-end;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .btn-add {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .btn-assign {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .btn-add:hover {
-            background-color: #2980b9;
-        }
-        
-        .btn-assign:hover {
-            background-color: #218838;
-        }
-        
-        /* Make main content wider for dominant table */
-        .main-content {
-            margin-left: 280px;
-            padding: 20px 30px;
-            width: calc(100% - 280px);
-            box-sizing: border-box;
-        }
-        
-        .form-row {
-            display: block;
-        }
-        
-        .card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        
-        .card-header {
-            padding: 20px 25px;
-            background-color: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
-        }
-        
-        .card-title {
-            margin: 0;
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
-        
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #e9ecef;
-        }
-        
-        .topbar h1 {
-            margin: 0;
-            font-size: 1.8rem;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .main-content {
-                margin-left: 0;
-                width: 100%;
-                padding: 15px;
-            }
-            .modal-content {
-                width: 95%;
-                margin: 10% auto;
-            }
-        }
+       
+    /* ==========================================
+   MAIN CONTENT
+========================================== */
+.main-content{
+    margin-left:260px;
+    padding:30px;
+    min-height:100vh;
+}
+
+/* ==========================================
+   TOPBAR
+========================================== */
+.topbar{
+    background:#fff;
+    padding:20px 30px;
+    margin-bottom:25px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.topbar h1{
+    margin:0;
+    font-size:28px;
+    color:#333;
+}
+
+/* ==========================================
+   ACTION BUTTONS
+========================================== */
+.action-header{
+    display:flex;
+    justify-content:flex-end;
+    gap:12px;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+}
+
+.btn-add,
+.btn-assign{
+    border:none;
+    border-radius:8px;
+    padding:10px 18px;
+    color:#fff;
+    cursor:pointer;
+    font-size:14px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.btn-add{
+    background:#3498db;
+}
+
+.btn-add:hover{
+    background:#2980b9;
+}
+
+.btn-assign{
+    background:#28a745;
+}
+
+.btn-assign:hover{
+    background:#218838;
+}
+
+/* ==========================================
+   CARD
+========================================== */
+.card{
+    background:#fff;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+.card-header{
+    padding:20px;
+    background:#f8f9fa;
+    border-bottom:1px solid #e9ecef;
+}
+
+.card-title{
+    margin:0;
+    font-size:20px;
+}
+
+/* ==========================================
+   TABLE
+========================================== */
+.table-container{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+thead{
+    background:#2c3e50;
+    color:white;
+}
+
+th,
+td{
+    padding:14px;
+    text-align:left;
+    border-bottom:1px solid #eee;
+}
+
+tbody tr:hover{
+    background:#f8f9fa;
+}
+
+/* ==========================================
+   ACTION BUTTONS INSIDE TABLE
+========================================== */
+.action-buttons{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.btn-sm{
+    padding:6px 12px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:13px;
+    text-decoration:none;
+}
+
+.btn-warning{
+    background:#ffc107;
+    color:#212529;
+}
+
+.btn-warning:hover{
+    background:#e0a800;
+}
+
+.btn-danger{
+    background:#dc3545;
+    color:white;
+}
+
+.btn-danger:hover{
+    background:#c82333;
+}
+
+/* ==========================================
+   MODAL
+========================================== */
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.5);
+    backdrop-filter:blur(4px);
+    z-index:9999;
+}
+
+.modal-content{
+    width:500px;
+    max-width:95%;
+    margin:60px auto;
+    background:#fff;
+    border-radius:12px;
+    overflow:hidden;
+    animation:fadeIn .25s ease;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(-20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.modal-header{
+    background:#2c3e50;
+    color:white;
+    padding:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.modal-body{
+    padding:20px;
+}
+
+.modal-footer{
+    padding:20px;
+    background:#f8f9fa;
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+}
+
+.close-modal{
+    font-size:28px;
+    cursor:pointer;
+}
+
+/* ==========================================
+   FORM
+========================================== */
+.form-group{
+    margin-bottom:18px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:6px;
+    font-weight:600;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid #ddd;
+    border-radius:6px;
+    font-size:14px;
+}
+
+.form-group textarea{
+    min-height:90px;
+    resize:vertical;
+}
+
+.btn-primary{
+    background:#3498db;
+    color:white;
+    border:none;
+    padding:10px 18px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.btn-primary:hover{
+    background:#2980b9;
+}
+
+.btn-secondary{
+    background:#95a5a6;
+    color:white;
+    border:none;
+    padding:10px 18px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.btn-secondary:hover{
+    background:#7f8c8d;
+}
+
+/* ==========================================
+   MOBILE
+========================================== */
+@media(max-width:768px){
+
+    .main-content{
+        margin-left:0;
+        padding:15px;
+    }
+
+    .topbar{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .action-header{
+        justify-content:stretch;
+    }
+
+    .btn-add,
+    .btn-assign{
+        width:100%;
+    }
+
+    .action-buttons{
+        flex-direction:column;
+    }
+
+    .action-buttons .btn{
+        width:100%;
+        text-align:center;
+    }
+}
+    
     </style>
 </head>
 
