@@ -102,7 +102,7 @@ $incentives = $pdo->query("
     <!-- TOPBAR -->
     <div class="topbar">
         <h1>🎁 Incentives Management</h1>
-        <div><?= date('l, F d, Y') ?></div>
+                        <div><?= date('l, F d, Y') ?></div>
     </div>
 
     <?php if (isset($success)): ?>

@@ -146,7 +146,7 @@ $attendance = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
     <h2 style="text-align:center;">PAYSLIP</h2>
-    <p style="text-align:center;">Company Name</p>
+    <p style="text-align:center;">Company ni Chan</p>
 
     <hr>
 
@@ -182,14 +182,10 @@ $attendance = $stmt->fetch(PDO::FETCH_ASSOC);
 <div class="button-row">
 
     <?php if ($payroll): ?>
-        <a href="export_payslip_xml.php" class="btn btn-export">
+        <a href="export_payslip_xml.php" class="btn btn-primary">
             📄 Export XML
         </a>
     <?php endif; ?>
-
-    <button onclick="window.print()" class="btn btn-print">
-        🖨️ Print Payslip
-    </button>
 
 </div>
 
